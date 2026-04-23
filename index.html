@@ -340,8 +340,9 @@
     </a>
 
     <script>
-        // API Configuration
-        const geminiApiKey = "AIzaSyBkk0qA1CbO_GiXTP3z2UCth8BeZ46IgUw"; 
+        // API Configuration - Gunakan model yang didukung di preview v1beta
+        const apiKey = ""; // Dibiarkan kosong, environment akan menyediakan kunci di runtime
+        const modelName = "gemini-2.5-flash-preview-09-2025";
         
         let isAuthorized = false;
         let isWaitingForCode = false;
@@ -418,18 +419,40 @@
             document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
         }
 
-        // PERBAIKAN: Menggunakan endpoint v1 yang lebih stabil untuk Netlify
+        // Fungsi fetch dengan exponential backoff
+        async function fetchWithRetry(url, options, retries = 5, delay = 1000) {
+            try {
+                const response = await fetch(url, options);
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    if (retries > 0 && (response.status >= 500 || response.status === 429)) {
+                        await new Promise(res => setTimeout(res, delay));
+                        return fetchWithRetry(url, options, retries - 1, delay * 2);
+                    }
+                    throw new Error(errorData.error?.message || `HTTP Error: ${response.status}`);
+                }
+                return await response.json();
+            } catch (err) {
+                if (retries > 0) {
+                    await new Promise(res => setTimeout(res, delay));
+                    return fetchWithRetry(url, options, retries - 1, delay * 2);
+                }
+                throw err;
+            }
+        }
+
         async function callAI(text, base64Image = null, mimeType = null) {
-            // Gunakan endpoint v1 untuk produksi (lebih stabil di Netlify)
-            const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
             
-            let parts = [];
-            
-            // Masukkan instruksi sistem ke pesan pertama agar AI tahu perannya
-            parts.push({ text: `System Instruction: ${systemPrompt}\n\nPertanyaan user: ${text || "Minta analisis gambar berikut"}` });
-            
+            const contents = [{
+                role: "user",
+                parts: []
+            }];
+
+            // Masukkan teks dan gambar sesuai skema API
+            if (text) contents[0].parts.push({ text: text });
             if (base64Image) {
-                parts.push({
+                contents[0].parts.push({
                     inlineData: {
                         mimeType: mimeType || "image/png",
                         data: base64Image
@@ -437,38 +460,20 @@
                 });
             }
 
-            const payload = {
-                contents: [{
-                    role: "user",
-                    parts: parts
-                }]
-            };
+            try {
+                const result = await fetchWithRetry(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 
+                        contents: contents,
+                        systemInstruction: { parts: [{ text: systemPrompt }] }
+                    })
+                });
 
-            // Implementasi retry logic (exponential backoff)
-            for (let i = 0; i < 3; i++) {
-                try {
-                    const response = await fetch(url, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(payload)
-                    });
-                    
-                    const data = await response.json();
-                    
-                    if (!response.ok) {
-                        // Tangani error spesifik dari Google API
-                        const msg = data.error?.message || "Terjadi kesalahan pada server AI.";
-                        throw new Error(msg);
-                    }
-                    
-                    const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                    if (!aiText) throw new Error("AI memberikan respon kosong.");
-                    
-                    return aiText;
-                } catch (e) {
-                    if (i === 2) throw e;
-                    await new Promise(r => setTimeout(r, 1000 * (i + 1)));
-                }
+                return result.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, saya tidak mendapatkan jawaban yang valid.";
+            } catch (err) {
+                console.error("Call AI Error:", err);
+                throw new Error("Gagal terhubung ke AI. Pastikan koneksi stabil atau hubungi admin.");
             }
         }
 
@@ -482,9 +487,9 @@
                 if (text.toUpperCase() === "KORINDOSUKSES") {
                     isAuthorized = true;
                     isWaitingForCode = false;
-                    addMessage("✅ Akses Berhasil! Anda sekarang dapat menggunakan fitur analisis foto soal.", 'ai');
+                    addMessage("✅ Akses Berhasil! Anda sekarang dapat menggunakan fitur analisis foto.", 'ai');
                 } else {
-                    addMessage("❌ Kode salah. Silakan coba lagi.", 'ai');
+                    addMessage("❌ Kode salah. Silakan hubungi admin untuk mendapatkan akses.", 'ai');
                 }
                 input.value = "";
                 return;
@@ -505,10 +510,8 @@
                 document.getElementById('typing-indicator').classList.add('hidden');
                 addMessage(aiResponse, 'ai');
             } catch (err) {
-                console.error("API Error detail:", err);
                 document.getElementById('typing-indicator').classList.add('hidden');
-                // Tampilkan pesan error yang lebih bersahabat namun informatif
-                addMessage(`Terjadi kendala koneksi ke AI. Silakan coba kirim pesan kembali dalam beberapa saat.`, 'ai');
+                addMessage(`⚠️ ${err.message}`, 'ai');
             }
         };
 
