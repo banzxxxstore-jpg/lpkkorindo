@@ -46,15 +46,81 @@
             object-fit: cover;
             box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
+        /* AI Chat Styles */
+        #ai-chat-window {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+        }
+        #ai-chat-window.active {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+        .chat-bubble-user {
+            background: #2563eb;
+            color: white;
+            border-radius: 18px 18px 2px 18px;
+        }
+        .chat-bubble-ai {
+            background: #f1f5f9;
+            color: #1e293b;
+            border-radius: 18px 18px 18px 2px;
+        }
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: #94a3b8;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        .roadmap-step {
+            position: relative;
+            padding-left: 2.5rem;
+            border-left: 2px dashed #e2e8f0;
+            padding-bottom: 2rem;
+        }
+        .roadmap-step::before {
+            content: '';
+            position: absolute;
+            left: -9px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #2563eb;
+            border: 4px solid white;
+        }
+
+        #image-preview-container {
+            display: none;
+            padding: 8px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            position: relative;
+        }
+        #image-preview-img {
+            height: 60px;
+            width: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #2563eb;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 overflow-x-hidden">
 
-    <!-- Header / Navbar -->
     <nav class="fixed w-full z-50 glass border-b border-slate-200/60">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20 items-center">
-                <!-- Logo -->
                 <div class="flex items-center gap-3">
                     <img src="https://www.image2url.com/r2/default/images/1776939883449-2a93d125-ed44-4e84-8846-791ad1edd879.jpg" alt="Logo LPK Korindo" class="h-10 md:h-12 w-auto object-contain">
                     <div class="flex flex-col leading-tight">
@@ -63,10 +129,10 @@
                     </div>
                 </div>
                 
-                <!-- Desktop Navigation -->
                 <div class="hidden md:flex space-x-8 font-semibold text-sm items-center">
                     <a href="#beranda" class="text-slate-600 hover:text-blue-600 transition">Beranda</a>
                     <a href="#program" class="text-slate-600 hover:text-blue-600 transition">Program</a>
+                    <a href="#ai-roadmap" class="text-blue-600 hover:text-blue-800 transition flex items-center gap-1">✨ Karir AI</a>
                     <a href="#tentang" class="text-slate-600 hover:text-blue-600 transition">Tentang</a>
                     <a href="#lokasi" class="text-slate-600 hover:text-red-500 transition flex items-center gap-2">
                         <i class="fas fa-map-marker-alt"></i> Lokasi
@@ -74,7 +140,6 @@
                     <a href="#kontak" class="bg-blue-600 text-white px-6 py-2.5 rounded-full hover:bg-blue-700 transition shadow-lg shadow-blue-200">Daftar Sekarang</a>
                 </div>
 
-                <!-- Mobile Menu Button -->
                 <div class="md:hidden">
                     <button id="mobile-menu-button" class="text-slate-900 focus:outline-none p-2">
                         <i class="fas fa-bars text-2xl"></i>
@@ -83,17 +148,16 @@
             </div>
         </div>
         
-        <!-- Mobile Navigation Menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 p-6 space-y-4 shadow-xl">
             <a href="#beranda" class="block text-slate-700 font-semibold py-2">Beranda</a>
             <a href="#program" class="block text-slate-700 font-semibold py-2">Program</a>
+            <a href="#ai-roadmap" class="block text-blue-600 font-semibold py-2">✨ Karir AI</a>
             <a href="#tentang" class="block text-slate-700 font-semibold py-2">Tentang</a>
             <a href="#lokasi" class="block text-slate-700 font-semibold py-2"><i class="fas fa-map-marker-alt mr-2 text-red-500"></i>Lokasi Kami</a>
             <a href="#kontak" class="block bg-blue-600 text-white text-center py-3 rounded-xl font-bold">Daftar Sekarang</a>
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <section id="beranda" class="relative pt-32 pb-16 md:pt-48 md:pb-24 hero-gradient text-white overflow-hidden">
         <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -118,7 +182,6 @@
                         </a>
                     </div>
                 </div>
-                <!-- Hero Image (Spanduk Pantai) -->
                 <div class="relative mt-8 lg:mt-0">
                     <div class="absolute -inset-4 bg-blue-500/20 blur-3xl rounded-full"></div>
                     <div class="relative bg-white/5 p-2 rounded-[2.5rem] border border-white/10 backdrop-blur-sm">
@@ -129,177 +192,182 @@
         </div>
     </section>
 
-    <!-- Section Program Pelatihan -->
-    <section id="program" class="py-20 md:py-32 bg-slate-50">
+    <!-- UI Roadmap Section -->
+    <section id="ai-roadmap" class="py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="section-tag">Fitur Cerdas</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900">✨ AI Career Roadmap</h2>
+                <p class="text-slate-600 mt-4">Bingung harus mulai dari mana? Biarkan AI kami menyusun rencana karir luar negeri Anda secara instan.</p>
+            </div>
+
+            <div class="bg-slate-50 p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Negara Tujuan</label>
+                        <select id="roadmap-country" class="w-full px-5 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-600 transition">
+                            <option value="Korea Selatan">Korea Selatan (G-to-G)</option>
+                            <option value="Jepang">Jepang (Magang/SSW)</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Bidang Pekerjaan</label>
+                        <select id="roadmap-sector" class="w-full px-5 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-600 transition">
+                            <option value="Manufaktur/Pabrik">Manufaktur/Pabrik</option>
+                            <option value="Perikanan/Fishing">Perikanan/Fishing</option>
+                            <option value="Konstruksi">Konstruksi</option>
+                            <option value="Pertanian">Pertanian</option>
+                            <option value="Caregiver/Lansia">Caregiver (Khusus Jepang)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button onclick="generateRoadmap()" id="btn-roadmap" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-bold rounded-xl hover:opacity-90 transition shadow-xl shadow-blue-200 flex items-center justify-center gap-3">
+                    <i class="fas fa-wand-magic-sparkles"></i>
+                    <span>✨ Buat Rencana Karir Saya</span>
+                </button>
+
+                <div id="roadmap-output" class="mt-10 hidden">
+                    <div class="bg-white p-8 rounded-3xl border border-blue-100 shadow-inner">
+                        <h4 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                            <i class="fas fa-route text-blue-600"></i> Rencana Karir Anda
+                        </h4>
+                        <div id="roadmap-content" class="space-y-1"></div>
+                    </div>
+                </div>
+
+                <div id="roadmap-loading" class="mt-10 hidden text-center py-10">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-t-transparent mb-4"></div>
+                    <p class="text-slate-500 font-medium">✨ AI sedang menganalisis jalur terbaik untuk Anda...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lokasi Section -->
+    <section id="lokasi" class="py-20 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="section-tag">Kunjungi Kantor Kami</span>
+                <h2 class="text-3xl md:text-5xl font-extrabold text-slate-900">Lokasi Strategis</h2>
+            </div>
+            
+            <div class="bg-white p-4 rounded-[3rem] shadow-xl border border-slate-200 overflow-hidden h-[450px] relative">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.3409419131976!2d108.30397577402636!3d-6.349887562124584!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6eb942f7c223c7%3A0xc3910c754d9203f5!2sSukalila%2C%20Jatibarang%2C%20Indramayu%20Regency%2C%20West%20Java%2045273!5e0!3m2!1sen!2sid!4v1713880000000!5m2!1sen!2sid" 
+                    class="w-full h-full border-0 rounded-[2.5rem]" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+                <a href="https://maps.google.com/?q=Sukalila,Jatibarang,Indramayu" target="_blank" class="absolute bottom-8 right-8 bg-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-2 font-bold text-slate-900 hover:bg-slate-50 transition border border-slate-200">
+                    <i class="fas fa-directions text-blue-600"></i> Buka di Google Maps
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Program Section -->
+    <section id="program" class="py-20 md:py-32 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <span class="section-tag">Program Unggulan 2026</span>
                 <h2 class="text-3xl md:text-5xl font-extrabold text-slate-900">Pilih Jalur Karirmu</h2>
             </div>
-            
             <div class="grid md:grid-cols-2 gap-8 lg:gap-12">
-                <!-- Program Korea -->
-                <div class="program-card bg-white p-8 md:p-12 rounded-[3rem] shadow-sm border border-slate-200 relative overflow-hidden group">
+                <div class="program-card bg-slate-50 p-8 md:p-12 rounded-[3rem] shadow-sm border border-slate-200 relative overflow-hidden group">
                     <div class="absolute -top-12 -right-12 w-48 h-48 bg-blue-50 rounded-full group-hover:scale-110 transition duration-700"></div>
                     <div class="relative z-10">
-                        <!-- Bendera Korea Selatan -->
                         <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg" alt="Bendera Korea Selatan" class="flag-icon mb-8 border border-slate-100">
-                        
                         <h3 class="text-2xl md:text-3xl font-extrabold text-slate-900 mb-4">G-to-G Korea Selatan (EPS)</h3>
-                        <p class="text-slate-600 mb-8 leading-relaxed text-sm md:text-base">Persiapan ujian EPS-TOPIK 2026 dengan kurikulum standar HRD Korea. Materi mencakup tata bahasa, kosakata industri, dan simulasi ujian berbasis komputer (CBT).</p>
-                        
-                        <div class="space-y-4 mb-10">
-                            <div class="flex items-center gap-3">
-                                <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600 text-[10px]"><i class="fas fa-check"></i></div>
-                                <span class="text-sm font-bold text-slate-700">Instruktur Berpengalaman</span>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600 text-[10px]"><i class="fas fa-check"></i></div>
-                                <span class="text-sm font-bold text-slate-700">Try Out Rutin Berbasis CBT</span>
-                            </div>
-                        </div>
-                        
-                        <a href="#kontak" class="flex items-center gap-2 text-blue-600 font-extrabold group-hover:gap-4 transition-all uppercase tracking-wider text-xs">
-                            Daftar Korea <i class="fas fa-arrow-right"></i>
-                        </a>
+                        <p class="text-slate-600 mb-8 leading-relaxed text-sm md:text-base">Persiapan ujian EPS-TOPIK 2026 dengan kurikulum standar HRD Korea.</p>
+                        <a href="#kontak" class="flex items-center gap-2 text-blue-600 font-extrabold group-hover:gap-4 transition-all uppercase tracking-wider text-xs">Daftar Korea <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
-
-                <!-- Program Jepang -->
-                <div class="program-card bg-white p-8 md:p-12 rounded-[3rem] shadow-sm border border-slate-200 relative overflow-hidden group">
+                <div class="program-card bg-slate-50 p-8 md:p-12 rounded-[3rem] shadow-sm border border-slate-200 relative overflow-hidden group">
                     <div class="absolute -top-12 -right-12 w-48 h-48 bg-red-50 rounded-full group-hover:scale-110 transition duration-700"></div>
                     <div class="relative z-10">
-                        <!-- Bendera Jepang -->
                         <img src="https://upload.wikimedia.org/wikipedia/commons/9/9e/Flag_of_Japan.svg" alt="Bendera Jepang" class="flag-icon mb-8 border border-slate-100">
-                        
                         <h3 class="text-2xl md:text-3xl font-extrabold text-slate-900 mb-4">G-to-G / Magang Jepang</h3>
-                        <p class="text-slate-600 mb-8 leading-relaxed text-sm md:text-base">Pelatihan bahasa Jepang tingkat dasar (N5/N4) dan persiapan wawancara dengan user Jepang untuk berbagai sektor industri angkatan 2026.</p>
-                        
-                        <div class="space-y-4 mb-10">
-                            <div class="flex items-center gap-3">
-                                <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600 text-[10px]"><i class="fas fa-check"></i></div>
-                                <span class="text-sm font-bold text-slate-700">Pemantapan Karakter & Kedisiplinan</span>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600 text-[10px]"><i class="fas fa-check"></i></div>
-                                <span class="text-sm font-bold text-slate-700">Informasi Job Terupdate</span>
-                            </div>
-                        </div>
-                        
-                        <a href="#kontak" class="flex items-center gap-2 text-red-500 font-extrabold group-hover:gap-4 transition-all uppercase tracking-wider text-xs">
-                            Daftar Jepang <i class="fas fa-arrow-right"></i>
-                        </a>
+                        <p class="text-slate-600 mb-8 leading-relaxed text-sm md:text-base">Pelatihan bahasa Jepang tingkat dasar (N5/N4) dan persiapan wawancara user.</p>
+                        <a href="#kontak" class="flex items-center gap-2 text-red-500 font-extrabold group-hover:gap-4 transition-all uppercase tracking-wider text-xs">Daftar Jepang <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Section Dokumentasi -->
-    <section class="py-16 md:py-24 bg-white overflow-hidden border-t border-slate-100">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-10">
-                <span class="section-tag">Dokumentasi</span>
-                <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">Kebersamaan Siswa</h2>
-                <p class="text-slate-600 text-sm md:text-base">Menciptakan lingkungan belajar yang penuh semangat dan kekeluargaan.</p>
-            </div>
-            
-            <!-- Menggunakan gambar yang sama karena estetik untuk banner dokumentasi -->
-            <div class="relative rounded-3xl overflow-hidden shadow-2xl">
-                <img src="https://www.image2url.com/r2/default/images/1776939981383-200a4a53-b9c5-471b-9abc-73cb56ececd2.jpg" alt="[Dokumentasi LPK Korindo]" class="w-full h-auto">
-            </div>
-        </div>
-    </section>
-
-    <!-- Section Tentang -->
-    <section id="tentang" class="py-20 md:py-32 bg-white">
+    <!-- Tentang Section -->
+    <section id="tentang" class="py-20 md:py-32 bg-slate-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
+            <div class="grid lg:grid-cols-2 gap-16 items-start">
                 <div class="space-y-6">
                     <span class="section-tag">Tentang Kami</span>
-                    <h2 class="text-3xl md:text-5xl font-extrabold text-slate-900 leading-tight">
-                        Lembaga Pelatihan Terpercaya di <span class="text-blue-600">Indramayu</span>
-                    </h2>
+                    <h2 class="text-3xl md:text-5xl font-extrabold text-slate-900 leading-tight">Membangun Karir <span class="text-blue-600">Masa Depan</span></h2>
                     <p class="text-base md:text-lg text-slate-600 leading-relaxed">
-                        Berdiri sejak tahun 2010, <strong>LPK Korindo</strong> telah mendedikasikan diri untuk mencetak tenaga kerja handal yang siap bersaing di pasar internasional. Kami mengutamakan kualitas pengajaran dan transparansi proses.
+                        LPK Korindo Indramayu merupakan lembaga kursus, program yang dikembangkan adalah bahasa Korea dan bahasa jepang, khususnya untuk calon pekerja migran Indonesia yang ingin mengikuti Program G to G (goverment to goverment) Korea Selatan dan Jepang, yakni program kerjasama antara pemerintah Indonesia dengan pemerintah Korea Selatan. Didirikan sejak tahun 2010 yang berlokasi di kelurahan Sukalila Kecamatan Jatibarang Kabupaten Indramayu.
                     </p>
-                    <div class="grid grid-cols-2 gap-6 pt-4">
-                        <div class="p-6 bg-slate-50 rounded-2xl">
-                            <p class="text-3xl font-black text-blue-600 mb-1">14+</p>
-                            <p class="text-xs font-bold text-slate-500 uppercase">Tahun Pengalaman</p>
-                        </div>
-                        <div class="p-6 bg-slate-50 rounded-2xl">
-                            <p class="text-3xl font-black text-blue-600 mb-1">1000+</p>
-                            <p class="text-xs font-bold text-slate-500 uppercase">Alumni Sukses</p>
-                        </div>
+                    <div class="p-6 bg-white border border-slate-200 rounded-3xl shadow-sm">
+                        <h4 class="font-bold text-slate-900 mb-2 flex items-center gap-2"><i class="fas fa-map-marker-alt text-red-500"></i> Alamat Kantor:</h4>
+                        <p class="text-slate-600 text-sm">Kelurahan Sukalila, Kec. Jatibarang, Kabupaten Indramayu, Jawa Barat 45273</p>
                     </div>
                 </div>
-                
                 <div class="bg-slate-900 p-8 md:p-12 rounded-[3rem] text-white shadow-2xl relative overflow-hidden">
-                    <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-600/20 blur-3xl"></div>
+                    <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-blue-600/10 rounded-full"></div>
                     <h3 class="text-xl md:text-2xl font-bold mb-8 flex items-center gap-3">
-                        <span class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-sm"><i class="fas fa-bullseye"></i></span>
-                        Komitmen Kami 2026
+                        <i class="fas fa-bullseye text-blue-400"></i> Komitmen Kami
                     </h3>
-                    <div class="space-y-8">
-                        <div class="flex gap-5">
-                            <div class="shrink-0 w-8 h-8 rounded-lg bg-blue-600/30 flex items-center justify-center text-xs text-blue-400 font-bold">01</div>
-                            <p class="text-slate-300 text-sm md:text-base leading-relaxed">Menyediakan fasilitas belajar yang nyaman dan kondusif bagi seluruh siswa.</p>
-                        </div>
-                        <div class="flex gap-5">
-                            <div class="shrink-0 w-8 h-8 rounded-lg bg-blue-600/30 flex items-center justify-center text-xs text-blue-400 font-bold">02</div>
-                            <p class="text-slate-300 text-sm md:text-base leading-relaxed">Mendidik karakter dan etos kerja profesional sesuai standar internasional.</p>
-                        </div>
-                        <div class="flex gap-5">
-                            <div class="shrink-0 w-8 h-8 rounded-lg bg-blue-600/30 flex items-center justify-center text-xs text-blue-400 font-bold">03</div>
-                            <p class="text-slate-300 text-sm md:text-base leading-relaxed">Mendampingi seluruh proses administrasi hingga keberangkatan resmi G-to-G.</p>
-                        </div>
-                    </div>
+                    <ul class="space-y-5">
+                        <li class="flex gap-4">
+                            <i class="fas fa-check-circle text-blue-500 mt-1 shrink-0"></i>
+                            <span class="text-slate-300 text-sm md:text-base">Menjadi suatu lembaga yang unggul dan memiliki integritas tinggi.</span>
+                        </li>
+                        <li class="flex gap-4">
+                            <i class="fas fa-check-circle text-blue-500 mt-1 shrink-0"></i>
+                            <span class="text-slate-300 text-sm md:text-base">Mendidik siswa agar memiliki kemampuan bahasa korea yang baik dan benar.</span>
+                        </li>
+                        <li class="flex gap-4">
+                            <i class="fas fa-check-circle text-blue-500 mt-1 shrink-0"></i>
+                            <span class="text-slate-300 text-sm md:text-base">Mengembangkan program, sarana dan prasarana pelatihan sesuai dengan kebutuhan dan permintaan dari pengguna jasa.</span>
+                        </li>
+                        <li class="flex gap-4">
+                            <i class="fas fa-check-circle text-blue-500 mt-1 shrink-0"></i>
+                            <span class="text-slate-300 text-sm md:text-base">Meningkatkan Sumber Daya Manusia dan perekonomian masyarakat.</span>
+                        </li>
+                        <li class="flex gap-4">
+                            <i class="fas fa-check-circle text-blue-500 mt-1 shrink-0"></i>
+                            <span class="text-slate-300 text-sm md:text-base">Melaksanakan pelatihan berbasis kompetensi serta melaksanakan Uji Kompetensi (UJK) dalam rangka penempatan kelulusan.</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Contact Section -->
+    <!-- Kontak Section (Formulir Pendaftaran) -->
     <section id="kontak" class="py-16 md:py-32 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-slate-900 rounded-[3rem] md:rounded-[4rem] p-8 md:p-20 flex flex-col lg:flex-row items-center gap-16 relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 blur-[100px]"></div>
-                <div class="flex-1 space-y-6 relative z-10 text-center lg:text-left">
-                    <span class="text-blue-400 font-bold uppercase tracking-widest text-xs">Konsultasi Gratis</span>
-                    <h2 class="text-3xl md:text-5xl font-extrabold text-white">Siap Mulai Langkahmu?</h2>
-                    <p class="text-slate-400 text-lg leading-relaxed">Hubungi admin kami hari ini untuk informasi jadwal kelas angkatan 2026 terdekat.</p>
-                    <div class="flex flex-col sm:flex-row items-center gap-6 justify-center lg:justify-start pt-4">
-                        <div class="flex items-center gap-4 text-white">
-                            <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
-                                <i class="fab fa-whatsapp text-3xl"></i>
-                            </div>
-                            <div class="text-left">
-                                <p class="text-[10px] text-slate-500 font-black uppercase tracking-widest">WhatsApp Admin</p>
-                                <p class="font-bold text-xl">0877-2912-4990</p>
-                            </div>
-                        </div>
-                    </div>
+                <div class="flex-1 text-center lg:text-left text-white z-10">
+                    <h2 class="text-3xl md:text-5xl font-extrabold">Siap Mulai Langkahmu?</h2>
+                    <p class="text-slate-400 mt-4 text-lg">Hubungi admin kami di <strong>+62 877-2912-4990</strong>.</p>
                 </div>
-                
-                <!-- Form Pendaftaran -->
-                <div class="w-full lg:w-[450px] bg-white p-8 md:p-12 rounded-[2.5rem] shadow-2xl relative z-10">
+                <div class="w-full lg:w-[450px] bg-white p-8 md:p-12 rounded-[2.5rem] shadow-2xl z-10">
                     <form id="contactForm" class="space-y-6">
                         <div class="space-y-2">
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Nama Lengkap</label>
-                            <input type="text" id="formNama" class="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-blue-600 outline-none transition" placeholder="Nama Anda" required>
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Nama Lengkap</label>
+                            <input type="text" id="formNama" class="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-600 transition" placeholder="Masukkan nama anda" required>
                         </div>
                         <div class="space-y-2">
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Pilih Program</label>
-                            <select id="formTujuan" class="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-600 appearance-none">
-                                <option>G-to-G Korea Selatan</option>
-                                <option>G-to-G Jepang</option>
-                                <option>Magang (Tokutei Ginou)</option>
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Program Minat</label>
+                            <select id="formTujuan" class="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-600 transition">
+                                <option value="G-to-G Korea Selatan">G-to-G Korea Selatan</option>
+                                <option value="G-to-G Jepang">G-to-G Jepang</option>
+                                <option value="Informasi Umum">Informasi Umum</option>
                             </select>
                         </div>
-                        <button type="submit" class="w-full py-5 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition shadow-lg shadow-blue-100 flex items-center justify-center gap-3">
-                            <span>Kirim ke WhatsApp</span>
-                            <i class="fab fa-whatsapp"></i>
+                        <button type="submit" class="w-full py-5 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition shadow-xl shadow-blue-200">
+                            <i class="fab fa-whatsapp mr-2"></i> Kirim ke WhatsApp
                         </button>
                     </form>
                 </div>
@@ -307,77 +375,289 @@
         </div>
     </section>
 
-    <!-- Location Section -->
-    <section id="lokasi" class="py-16 md:py-24 bg-slate-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <span class="section-tag">Lokasi Kami</span>
-                <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900">Kunjungi LPK Korindo</h2>
-                <p class="text-slate-600 mt-2">Buka peta untuk panduan navigasi langsung.</p>
-            </div>
-            
-            <div class="relative group cursor-pointer">
-                <a href="https://maps.app.goo.gl/QFMiYgm4oV9UrNeY6" target="_blank" class="absolute inset-0 z-20"></a>
-                <div class="relative bg-white rounded-[2.5rem] overflow-hidden shadow-xl border border-slate-200 aspect-[16/9] md:aspect-[21/9]">
-                    <iframe 
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.2078864757116!2d108.3129524!3d-6.3671239!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6eb94916a048a1%3A0xc34850709b48c3c!2sLPK%20KORINDO%20MODERN%20INDRAMAYU!5e0!3m2!1sid!2sid!4v1713876000000!5m2!1sid!2sid" 
-                        class="absolute inset-0 w-full h-full border-0 transition duration-500" 
-                        allowfullscreen="" 
-                        loading="lazy">
-                    </iframe>
-                    <div class="absolute bottom-6 left-6 right-6 z-10 md:w-fit">
-                        <div class="bg-white/95 backdrop-blur p-5 rounded-2xl shadow-xl flex items-center gap-4">
-                            <div class="w-10 h-10 bg-red-500 rounded-xl flex items-center justify-center text-white shrink-0"><i class="fas fa-map-pin"></i></div>
-                            <div>
-                                <p class="text-[10px] font-black text-slate-400 uppercase">Jatibarang, Indramayu</p>
-                                <p class="text-sm font-bold text-slate-900">Sukalila, Kec. Jatibarang, Jawa Barat 45273</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Footer -->
-    <footer class="bg-slate-900 pt-20 pb-10 text-white">
+    <footer class="bg-slate-900 pt-20 pb-10 text-white border-t border-white/5">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div class="flex items-center gap-3 mb-8 justify-center">
-                <img src="https://www.image2url.com/r2/default/images/1776939883449-2a93d125-ed44-4e84-8846-791ad1edd879.jpg" class="h-10 w-auto" alt="Logo LPK">
-                <span class="text-2xl font-black tracking-tighter uppercase">LPK KORINDO</span>
-            </div>
-            
-            <div class="flex justify-center gap-6 mb-16">
-                <a href="https://www.facebook.com/share/17agbWymaY/" target="_blank" class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-blue-600 transition"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://maps.app.goo.gl/QFMiYgm4oV9UrNeY6" target="_blank" class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-red-600 transition"><i class="fas fa-map-marker-alt"></i></a>
-                <a href="#" class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-pink-600 transition"><i class="fab fa-instagram"></i></a>
-            </div>
-            
-            <div class="pt-8 border-t border-white/5">
-                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">&copy; 2026 LPK Korindo Indramayu. Aman & Terpercaya.</p>
-            </div>
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">&copy; 2026 LPK Korindo Indramayu. Aman & Terpercaya.</p>
         </div>
     </footer>
 
-    <!-- Floating WhatsApp Button -->
-    <a href="https://wa.me/6287729124990" target="_blank" class="fixed bottom-6 right-6 z-[100] bg-green-500 text-white w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition duration-300">
-        <i class="fab fa-whatsapp text-2xl md:text-3xl"></i>
+    <!-- AI Chatbot UI -->
+    <div class="fixed bottom-24 right-6 z-[99] flex flex-col items-end gap-4">
+        <div id="ai-chat-window" class="w-[320px] md:w-[380px] h-[550px] bg-white rounded-[2rem] shadow-2xl flex flex-col overflow-hidden border border-slate-200">
+            <div class="p-5 bg-blue-600 text-white flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-white rounded-xl overflow-hidden shadow-md">
+                        <img src="https://www.image2url.com/r2/default/images/1776939883449-2a93d125-ed44-4e84-8846-791ad1edd879.jpg" alt="Logo Korindo" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <p class="font-bold text-sm">Korindo AI Assistant</p>
+                        <p id="chat-timer" class="text-[9px] text-blue-100 font-bold uppercase tracking-widest">Sesi Aktif: 03:00</p>
+                    </div>
+                </div>
+                <button onclick="toggleChat()"><i class="fas fa-times text-xl"></i></button>
+            </div>
+
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-5 space-y-4 bg-slate-50/50 flex flex-col">
+                <div class="chat-bubble-ai p-4 text-sm max-w-[85%] shadow-sm border border-slate-100">Halo! Saya asisten LPK Korindo. Ingin tanya info pendaftaran atau program Korea/Jepang? Silakan bertanya.</div>
+            </div>
+
+            <div id="typing-indicator" class="hidden px-5 py-2">
+                <div class="flex gap-1">
+                    <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+                </div>
+            </div>
+
+            <div id="image-preview-container" class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <img id="image-preview-img" src="" alt="Preview">
+                    <p class="text-[10px] text-slate-500 italic">Foto terpilih. Tambahkan pertanyaan lalu kirim.</p>
+                </div>
+                <button onclick="clearImagePreview()" class="text-red-500 p-2"><i class="fas fa-trash-alt"></i></button>
+            </div>
+
+            <div class="p-4 bg-white border-t border-slate-100">
+                <form id="ai-chat-form" class="flex items-center gap-2 relative">
+                    <div id="photo-upload-btn" class="shrink-0">
+                        <label class="w-10 h-10 bg-slate-100 text-slate-500 rounded-xl flex items-center justify-center cursor-pointer hover:bg-blue-50 hover:text-blue-600 transition border border-slate-200">
+                            <i class="fas fa-camera text-sm"></i>
+                            <input type="file" id="file-input" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
+                        </label>
+                    </div>
+
+                    <input type="text" id="ai-input" placeholder="Tanya sesuatu..." class="flex-1 px-4 py-2.5 bg-slate-100 rounded-xl text-sm outline-none focus:ring-1 focus:ring-blue-600">
+                    
+                    <button type="submit" class="w-10 h-10 shrink-0 bg-blue-600 text-white rounded-xl flex items-center justify-center transition hover:bg-blue-700 shadow-md">
+                        <i class="fas fa-paper-plane text-xs"></i>
+                    </button>
+                </form>
+                <p id="auth-status-hint" class="text-[8px] text-slate-400 mt-2 text-center uppercase tracking-widest">Fitur Analisis Soal, Foto & Tata Bahasa memerlukan Kode Akses</p>
+            </div>
+        </div>
+        <button onclick="toggleChat()" class="bg-blue-600 text-white w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center shadow-2xl transition hover:scale-110 active:scale-95 border-4 border-white">
+            <i class="fas fa-robot text-2xl"></i>
+        </button>
+    </div>
+
+    <!-- Floating WA -->
+    <a href="https://wa.me/6287729124990" target="_blank" class="fixed bottom-6 right-6 z-[100] bg-green-500 text-white w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center shadow-2xl transition hover:scale-110 border-4 border-white">
+        <i class="fab fa-whatsapp text-2xl"></i>
     </a>
 
     <script>
-        // Toggle Mobile Menu
-        const btn = document.getElementById('mobile-menu-button');
-        const menu = document.getElementById('mobile-menu');
-        btn.addEventListener('click', () => menu.classList.toggle('hidden'));
-
-        // Handle WhatsApp Form
-        document.getElementById('contactForm').addEventListener('submit', (e) => {
+        const apiKey = ""; 
+        const modelName = "gemini-2.5-flash-preview-09-2025";
+        
+        // --- WHATSAPP FORM HANDLER UPDATED ---
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            
             const nama = document.getElementById('formNama').value;
             const tujuan = document.getElementById('formTujuan').value;
-            const textMsg = `Assalamu'alaikum Admin LPK Korindo,\n\nSaya ingin bertanya mengenai pendaftaran angkatan 2026:\n\n• *Nama:* ${nama}\n• *Program:* ${tujuan}\n\nMohon informasi rincian biaya, jadwal kelas, dan daftar persyaratan dokumen yang diperlukan. Terima kasih.`;
-            window.open(`https://wa.me/6287729124990?text=${encodeURIComponent(textMsg)}`, '_blank');
+            const phone = "6287729124990"; // Nomor Admin Korindo
+            
+            // Format Pesan Baru: Salam + Data + Pertanyaan Persyaratan
+            const message = `Assalamu'alaikum Admin LPK Korindo Indramayu,\n\nSaya ingin mendaftar/konsultasi:\nNama: *${nama}*\nMinat Program: *${tujuan}*\n\nMohon informasi lebih lanjut untuk pendaftaran angkatan 2026. Apa saja rincian persyaratan yang harus saya siapkan? Terima kasih.`;
+            
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${phone}?text=${encodedMessage}`;
+            
+            // Buka di tab baru
+            window.open(whatsappUrl, '_blank');
         });
+
+        // --- Logic AI Chat & Roadmap (Sama seperti sebelumnya) ---
+        let isAuthorized = false;
+        let isWaitingForCode = false;
+        let countdownTimer = null;
+        let secondsLeft = 180;
+        let selectedFile = null;
+        let selectedFileData = null;
+
+        function toggleChat() {
+            document.getElementById('ai-chat-window').classList.toggle('active');
+            resetSessionTimer();
+        }
+
+        function updateTimerDisplay() {
+            const m = Math.floor(secondsLeft / 60);
+            const s = secondsLeft % 60;
+            document.getElementById('chat-timer').innerText = `Sesi Aktif: ${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+
+        function resetSessionTimer() {
+            clearInterval(countdownTimer);
+            secondsLeft = 180;
+            updateTimerDisplay();
+
+            countdownTimer = setInterval(() => {
+                secondsLeft--;
+                updateTimerDisplay();
+                if(secondsLeft <= 0) {
+                    clearInterval(countdownTimer);
+                    restartChat();
+                }
+            }, 1000);
+        }
+
+        function restartChat() {
+            const chatMessages = document.getElementById('chat-messages');
+            chatMessages.innerHTML = `<div class="chat-bubble-ai p-4 text-sm max-w-[85%]">Sesi telah diatur ulang. Ada lagi yang bisa saya bantu?</div>`;
+            isAuthorized = false;
+            isWaitingForCode = false;
+            clearImagePreview();
+            resetSessionTimer();
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            if(!isAuthorized) {
+                isWaitingForCode = true;
+                addMessage("🔒 Fitur kirim foto & analisis PR hanya tersedia bagi siswa resmi. Silakan masukkan KODE AKSES SISWA Anda untuk lanjut:", 'ai');
+                event.target.value = '';
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                selectedFile = file;
+                selectedFileData = e.target.result;
+                document.getElementById('image-preview-img').src = e.target.result;
+                document.getElementById('image-preview-container').style.display = 'flex';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function clearImagePreview() {
+            selectedFile = null;
+            selectedFileData = null;
+            document.getElementById('image-preview-container').style.display = 'none';
+            document.getElementById('file-input').value = '';
+        }
+
+        function addMessage(text, role, imageSrc = null) {
+            const div = document.createElement('div');
+            div.className = role === 'user' ? "chat-bubble-user p-4 text-sm max-w-[85%] self-end ml-auto shadow-sm" : "chat-bubble-ai p-4 text-sm max-w-[85%] self-start shadow-sm";
+            if (imageSrc) {
+                const img = document.createElement('img');
+                img.src = imageSrc;
+                img.className = "rounded-lg max-w-full h-auto mb-2 border border-white/20 shadow-sm";
+                div.appendChild(img);
+                if(text) {
+                    const caption = document.createElement('p');
+                    caption.innerText = text;
+                    div.appendChild(caption);
+                }
+            } else {
+                div.innerText = text;
+            }
+            document.getElementById('chat-messages').appendChild(div);
+            document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
+            resetSessionTimer();
+        }
+
+        const restrictedKeywords = ['tata bahasa', 'grammar', 'buatkan kalimat', 'susun kalimat', 'kerjakan pr', 'pengerjaan soal', 'rumus bahasa', 'buatkan contoh', 'artinya'];
+
+        const chatForm = document.getElementById('ai-chat-form');
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('ai-input');
+            const text = input.value.trim();
+            const lowerText = text.toLowerCase();
+            if(!text && !selectedFile) return;
+
+            if (isWaitingForCode) {
+                addMessage(text, 'user');
+                if (text.toUpperCase() === "KORINDOSUKSES") {
+                    isAuthorized = true;
+                    isWaitingForCode = false;
+                    addMessage("✅ Akses Berhasil! Sekarang Anda dapat bertanya tentang tata bahasa, kirim foto, dan konsultasi akademik secara mendalam.", 'ai');
+                } else {
+                    isWaitingForCode = false;
+                    addMessage("❌ Kode salah. Fitur analisis mendalam dan tata bahasa terkunci.", 'ai');
+                }
+                input.value = "";
+                return;
+            }
+
+            if (!isAuthorized) {
+                const isRestricted = restrictedKeywords.some(keyword => lowerText.includes(keyword));
+                if (isRestricted || selectedFile) {
+                    addMessage(text || "Analisis foto", 'user');
+                    isWaitingForCode = true;
+                    addMessage("🔒 Maaf, untuk bantuan tata bahasa, pengerjaan soal, atau analisis foto, silakan masukkan KODE AKSES SISWA LPK Korindo:", 'ai');
+                    input.value = "";
+                    clearImagePreview();
+                    return;
+                }
+            }
+
+            addMessage(text || "Analisis foto ini", 'user', selectedFileData);
+            input.value = "";
+            document.getElementById('typing-indicator').classList.remove('hidden');
+
+            const systemContext = `Anda adalah asisten khusus LPK Korindo Indramayu. WAKTU SEKARANG: Kamis, 23 April 2026. TANGGUNG JAWAB: 1. Info 2026. 2. Tata bahasa. 3. Fokus G-to-G. Tambahkan penutup promosi di tiap jawaban.`;
+
+            try {
+                let payload = {
+                    contents: [{ parts: [{ text: text || "Jelaskan isi foto ini dengan detail akademik." }] }],
+                    systemInstruction: { parts: [{ text: systemContext }] }
+                };
+                if (selectedFile && selectedFileData) {
+                    const base64Data = selectedFileData.split(',')[1];
+                    payload.contents[0].parts.push({ inlineData: { mimeType: selectedFile.type, data: base64Data } });
+                }
+                clearImagePreview();
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Terjadi kendala teknis.";
+                document.getElementById('typing-indicator').classList.add('hidden');
+                addMessage(aiText, 'ai');
+            } catch (err) {
+                document.getElementById('typing-indicator').classList.add('hidden');
+                addMessage("Koneksi terputus.", 'ai');
+            }
+        });
+
+        document.getElementById('mobile-menu-button').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        function generateRoadmap() {
+            const country = document.getElementById('roadmap-country').value;
+            const sector = document.getElementById('roadmap-sector').value;
+            const btn = document.getElementById('btn-roadmap');
+            const loading = document.getElementById('roadmap-loading');
+            const output = document.getElementById('roadmap-output');
+            const content = document.getElementById('roadmap-content');
+            btn.classList.add('hidden');
+            loading.classList.remove('hidden');
+            output.classList.add('hidden');
+            setTimeout(() => {
+                loading.classList.add('hidden');
+                output.classList.remove('hidden');
+                btn.classList.remove('hidden');
+                content.innerHTML = `
+                    <div class="roadmap-step">
+                        <p class="font-bold text-slate-900">Tahap 1: Pendaftaran & Pembelajaran 2026</p>
+                        <p class="text-sm text-slate-600">Mulai belajar bahasa untuk persiapan di bidang ${sector} di ${country}.</p>
+                    </div>
+                    <div class="roadmap-step">
+                        <p class="font-bold text-slate-900">Tahap 2: Ujian Sertifikasi Terkini</p>
+                        <p class="text-sm text-slate-600">Mengikuti ujian EPS-TOPIK (Korea) atau JLPT/NAT-TEST (Jepang) jadwal 2026.</p>
+                    </div>
+                    <div class="roadmap-step border-none">
+                        <p class="font-bold text-blue-600">Tahap 3: Terbang & Berkarir</p>
+                        <p class="text-sm text-slate-600">Penerbitan visa dan keberangkatan menuju ${country}.</p>
+                    </div>`;
+            }, 2000);
+        }
+
+        window.onload = () => { resetSessionTimer(); };
     </script>
 </body>
 </html>
