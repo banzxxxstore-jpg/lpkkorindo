@@ -340,8 +340,8 @@
     </a>
 
     <script>
-        // API Configuration (Menggunakan Gemini sebagai fallback karena Quota OpenAI Habis)
-        const geminiApiKey = ""; // Kosongkan, lingkungan ini menyediakan key otomatis
+        // API Configuration (Menggunakan API Key User)
+        const geminiApiKey = "AIzaSyBkk0qA1CbO_GiXTP3z2UCth8BeZ46IgUw"; 
         
         let isAuthorized = false;
         let isWaitingForCode = false;
@@ -418,9 +418,9 @@
             document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
         }
 
-        // Fungsi panggil AI menggunakan Gemini (Fallback agar tidak error Quota)
+        // Fungsi panggil AI menggunakan Gemini 1.5 Flash (API Key User)
         async function callAI(text, base64Image = null, mimeType = null) {
-            const model = "gemini-2.5-flash-preview-09-2025";
+            const model = "gemini-1.5-flash";
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiApiKey}`;
             
             let contents = [];
@@ -436,14 +436,20 @@
                 });
             }
 
-            contents.push({ role: "user", parts: parts });
+            // Memasukkan system instruction langsung ke dalam konten jika model versi lama atau via sistem jika didukung
+            // Di sini kita gunakan format content untuk menyertakan instruksi
+            contents.push({
+                role: "user",
+                parts: [
+                    { text: `System Instruction: ${systemPrompt}` },
+                    ...parts
+                ]
+            });
 
             const payload = {
-                contents: contents,
-                systemInstruction: { parts: [{ text: systemPrompt }] }
+                contents: contents
             };
 
-            // Implementasi retry dengan exponential backoff
             for (let i = 0; i < 5; i++) {
                 try {
                     const response = await fetch(url, {
@@ -452,7 +458,10 @@
                         body: JSON.stringify(payload)
                     });
                     
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error?.message || `HTTP error! status: ${response.status}`);
+                    }
                     
                     const data = await response.json();
                     return data.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, saya tidak dapat memproses permintaan tersebut.";
@@ -492,14 +501,13 @@
             document.getElementById('typing-indicator').classList.remove('hidden');
 
             try {
-                // Menggunakan fungsi callAI baru yang berbasis Gemini
                 const aiResponse = await callAI(text, tempBase64, tempMimeType);
                 document.getElementById('typing-indicator').classList.add('hidden');
                 addMessage(aiResponse, 'ai');
             } catch (err) {
                 console.error("API Error:", err);
                 document.getElementById('typing-indicator').classList.add('hidden');
-                addMessage("Maaf, sistem asisten sedang sibuk atau kuota harian habis. Silakan hubungi Admin via WhatsApp untuk info lebih lanjut.", 'ai');
+                addMessage(`Error: ${err.message}. Mohon periksa API Key atau koneksi internet.`, 'ai');
             }
         };
 
