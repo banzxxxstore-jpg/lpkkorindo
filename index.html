@@ -393,9 +393,9 @@
     </a>
 
     <script>
-        // --- KONFIGURASI API KEY GOOGLE AI STUDIO ---
-        const apiKey = "AIzaSyBkk0qA1CbO_GiXTP3z2UCth8BeZ46IgUw"; 
+        // Menggunakan model yang didukung di endpoint v1beta generateContent
         const modelName = "gemini-2.5-flash-preview-09-2025";
+        const apiKey = ""; // API key disediakan secara otomatis oleh lingkungan eksekusi
         
         let isAuthorized = false;
         let isWaitingForCode = false;
@@ -528,37 +528,46 @@
             }
 
             addMessage(text || "Analisis foto ini", 'user', selectedFileData);
-            const currentSelectedFileData = selectedFileData; // Simpan untuk API call
+            const currentSelectedFileData = selectedFileData; 
             const currentSelectedFileType = selectedFile?.type;
             
             input.value = "";
-            clearImagePreview(); // Bersihkan preview setelah data diambil
+            clearImagePreview(); 
             
             document.getElementById('typing-indicator').classList.remove('hidden');
 
             const systemContext = `Anda adalah asisten khusus LPK Korindo Indramayu. TANGGUNG JAWAB: Memberikan info pendaftaran 2026, bantuan bahasa Korea/Jepang, dan konsultasi karir G-to-G. Jika ditanya selain itu (misal: presiden), jawablah singkat dan arahkan kembali ke topik LPK Korindo. Selalu sopan dan gunakan Bahasa Indonesia.`;
 
-            const fetchGemini = async (payload, retries = 5, delay = 1000) => {
+            /**
+             * Melakukan fetch ke Gemini API dengan exponential backoff
+             */
+            const fetchGemini = async (payload, retries = 5, delays = [1000, 2000, 4000, 8000, 16000]) => {
                 const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        console.error("Gemini API Error:", errorData);
-                        throw new Error(errorData.error?.message || response.statusText);
+                
+                for (let i = 0; i <= retries; i++) {
+                    try {
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        
+                        if (response.status === 429) {
+                            if (i === retries) throw new Error("Kuota API Habis. Silakan coba lagi beberapa saat lagi.");
+                            // Tunggu sesuai delay sebelum mencoba lagi
+                            await new Promise(res => setTimeout(res, delays[i]));
+                            continue;
+                        }
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error?.message || "Terjadi kesalahan server.");
+                        }
+                        return await response.json();
+                    } catch (err) {
+                        if (i === retries) throw err;
+                        await new Promise(res => setTimeout(res, delays[i] || 1000));
                     }
-                    return await response.json();
-                } catch (err) {
-                    if (retries > 0) {
-                        await new Promise(res => setTimeout(res, delay));
-                        return fetchGemini(payload, retries - 1, delay * 2);
-                    }
-                    throw err;
                 }
             };
 
@@ -589,8 +598,14 @@
                 }
             } catch (err) {
                 document.getElementById('typing-indicator').classList.add('hidden');
-                console.error("Final catch error:", err);
-                addMessage("Terjadi kendala teknis (API Limit/Network). Silakan coba beberapa saat lagi.", 'ai');
+                console.error("Chat Error:", err);
+                
+                let errorMsg = "Terjadi kendala teknis. Silakan coba lagi.";
+                if (err.message.includes("quota") || err.message.includes("429")) {
+                    errorMsg = "Wah, kuota AI saya sedang penuh karena banyak yang bertanya. Mohon tunggu sekitar 1 menit lalu coba lagi ya! 🙏";
+                }
+                
+                addMessage(errorMsg, 'ai');
             }
         });
 
