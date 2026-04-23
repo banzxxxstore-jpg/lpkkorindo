@@ -340,8 +340,8 @@
     </a>
 
     <script>
-        // API Configuration - Gunakan model yang didukung di preview v1beta
-        const apiKey = ""; // Dibiarkan kosong, environment akan menyediakan kunci di runtime
+        // API Configuration - MEMAKSA PENGGUNAAN MODEL TERBARU
+        const apiKey = ""; 
         const modelName = "gemini-2.5-flash-preview-09-2025";
         
         let isAuthorized = false;
@@ -374,7 +374,9 @@
                 const m = Math.floor(secondsLeft / 60);
                 const s = secondsLeft % 60;
                 document.getElementById('chat-timer').innerText = `Sesi Aktif: ${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-                if(secondsLeft <= 0) clearInterval(countdownTimer);
+                if(secondsLeft <= 0) {
+                    clearInterval(countdownTimer);
+                }
             }, 1000);
         }
 
@@ -383,7 +385,7 @@
             if (!file) return;
             if(!isAuthorized) {
                 isWaitingForCode = true;
-                addMessage("🔒 Kirim foto hanya untuk siswa. Masukkan KODE AKSES:", 'ai');
+                addMessage("🔒 Fitur foto hanya untuk siswa. Masukkan KODE AKSES:", 'ai');
                 return;
             }
             const reader = new FileReader();
@@ -403,8 +405,10 @@
         }
 
         function addMessage(text, role, img = null) {
+            const messagesContainer = document.getElementById('chat-messages');
             const div = document.createElement('div');
             div.className = role === 'user' ? "chat-bubble-user p-4 text-sm max-w-[85%] self-end ml-auto shadow-sm" : "chat-bubble-ai p-4 text-sm max-w-[85%] self-start shadow-sm";
+            
             if(img) {
                 const i = document.createElement('img');
                 i.src = img;
@@ -412,28 +416,32 @@
                 i.onclick = () => window.open(img, '_blank');
                 div.appendChild(i);
             }
+            
             const p = document.createElement('p');
             p.innerText = text;
             div.appendChild(p);
-            document.getElementById('chat-messages').appendChild(div);
-            document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
+            messagesContainer.appendChild(div);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
 
-        // Fungsi fetch dengan exponential backoff
         async function fetchWithRetry(url, options, retries = 5, delay = 1000) {
             try {
                 const response = await fetch(url, options);
                 if (!response.ok) {
                     const errorData = await response.json().catch(() => ({}));
+                    // Jika error 404 pada model tertentu, ini adalah indikasi model name tidak cocok
+                    if (response.status === 404) {
+                        throw new Error(`Model ${modelName} tidak tersedia. Silakan hubungi pengembang.`);
+                    }
                     if (retries > 0 && (response.status >= 500 || response.status === 429)) {
                         await new Promise(res => setTimeout(res, delay));
                         return fetchWithRetry(url, options, retries - 1, delay * 2);
                     }
-                    throw new Error(errorData.error?.message || `HTTP Error: ${response.status}`);
+                    throw new Error(errorData.error?.message || "Terjadi kesalahan pada server AI.");
                 }
                 return await response.json();
             } catch (err) {
-                if (retries > 0) {
+                if (retries > 0 && !err.message.includes("tidak tersedia")) {
                     await new Promise(res => setTimeout(res, delay));
                     return fetchWithRetry(url, options, retries - 1, delay * 2);
                 }
@@ -442,6 +450,7 @@
         }
 
         async function callAI(text, base64Image = null, mimeType = null) {
+            // URL menggunakan v1beta dengan model yang dipaksakan
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
             
             const contents = [{
@@ -449,7 +458,6 @@
                 parts: []
             }];
 
-            // Masukkan teks dan gambar sesuai skema API
             if (text) contents[0].parts.push({ text: text });
             if (base64Image) {
                 contents[0].parts.push({
@@ -460,21 +468,16 @@
                 });
             }
 
-            try {
-                const result = await fetchWithRetry(url, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ 
-                        contents: contents,
-                        systemInstruction: { parts: [{ text: systemPrompt }] }
-                    })
-                });
+            const result = await fetchWithRetry(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 
+                    contents: contents,
+                    systemInstruction: { parts: [{ text: systemPrompt }] }
+                })
+            });
 
-                return result.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, saya tidak mendapatkan jawaban yang valid.";
-            } catch (err) {
-                console.error("Call AI Error:", err);
-                throw new Error("Gagal terhubung ke AI. Pastikan koneksi stabil atau hubungi admin.");
-            }
+            return result.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, sistem sedang sibuk. Silakan coba sesaat lagi.";
         }
 
         document.getElementById('ai-chat-form').onsubmit = async (e) => {
@@ -489,7 +492,7 @@
                     isWaitingForCode = false;
                     addMessage("✅ Akses Berhasil! Anda sekarang dapat menggunakan fitur analisis foto.", 'ai');
                 } else {
-                    addMessage("❌ Kode salah. Silakan hubungi admin untuk mendapatkan akses.", 'ai');
+                    addMessage("❌ Kode salah. Silakan hubungi admin LPK untuk mendapatkan akses.", 'ai');
                 }
                 input.value = "";
                 return;
@@ -511,17 +514,24 @@
                 addMessage(aiResponse, 'ai');
             } catch (err) {
                 document.getElementById('typing-indicator').classList.add('hidden');
-                addMessage(`⚠️ ${err.message}`, 'ai');
+                // Menampilkan pesan yang lebih ramah pengguna
+                addMessage("Terjadi kendala koneksi ke AI. Silakan coba kirim pesan kembali dalam beberapa saat.", 'ai');
+                console.error("AI Error:", err.message);
             }
         };
 
         function generateRoadmap() {
-            document.getElementById('btn-roadmap').classList.add('hidden');
-            document.getElementById('roadmap-loading').classList.remove('hidden');
+            const btn = document.getElementById('btn-roadmap');
+            const loading = document.getElementById('roadmap-loading');
+            const output = document.getElementById('roadmap-output');
+            
+            btn.classList.add('hidden');
+            loading.classList.remove('hidden');
+            
             setTimeout(() => {
-                document.getElementById('roadmap-loading').classList.add('hidden');
-                document.getElementById('roadmap-output').classList.remove('hidden');
-                document.getElementById('btn-roadmap').classList.remove('hidden');
+                loading.classList.add('hidden');
+                output.classList.remove('hidden');
+                btn.classList.remove('hidden');
                 document.getElementById('roadmap-content').innerHTML = `
                     <div class="roadmap-step"><p class="font-bold">1. Pelatihan Bahasa Intensif</p><p class="text-sm">Belajar 3-6 bulan di LPK Korindo untuk persiapan EPS-TOPIK atau JLPT.</p></div>
                     <div class="roadmap-step"><p class="font-bold">2. Pendaftaran Ujian 2026</p><p class="text-sm">Bimbingan pendaftaran akun di portal resmi pemerintah (BP2MI/J-Test).</p></div>
