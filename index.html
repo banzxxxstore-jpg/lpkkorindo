@@ -15,6 +15,9 @@
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             scroll-behavior: smooth;
+            /* Mencegah seleksi teks global agar lebih terasa seperti App */
+            -webkit-user-select: none;
+            user-select: none;
         }
         .glass {
             background: rgba(255, 255, 255, 0.9);
@@ -54,6 +57,25 @@
             object-fit: cover;
             box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
+        
+        /* Mencegah munculnya menu klik kanan/copy pada tombol */
+        .btn-responsive {
+            -webkit-touch-callout: none !important; 
+            -webkit-user-select: none !important;
+            -khtml-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            touch-action: manipulation;
+            outline: none;
+            -webkit-tap-highlight-color: transparent; /* Menghilangkan kotak biru saat tap di Android */
+        }
+        
+        /* Efek klik aktif untuk feedback visual */
+        .btn-responsive:active {
+            transform: scale(0.95) !important;
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body class="bg-[#fafafa] text-slate-900 overflow-x-hidden">
@@ -74,7 +96,7 @@
                     <a href="#beranda" class="text-slate-600 hover:text-blue-600 transition">Beranda</a>
                     <a href="#tentang" class="text-slate-600 hover:text-blue-600 transition">Tentang</a>
                     <a href="#program" class="text-slate-600 hover:text-blue-600 transition">Program</a>
-                    <a href="#kontak" class="bg-blue-600 text-white px-6 py-2.5 rounded-full hover:bg-blue-700 transition shadow-lg shadow-blue-200">Daftar Sekarang</a>
+                    <a href="#kontak" class="btn-responsive bg-blue-600 text-white px-6 py-2.5 rounded-full hover:bg-blue-700 transition shadow-lg shadow-blue-200">Daftar Sekarang</a>
                 </div>
 
                 <div class="md:hidden">
@@ -89,7 +111,7 @@
             <a href="#beranda" class="block text-slate-700 font-semibold py-2">Beranda</a>
             <a href="#tentang" class="block text-slate-700 font-semibold py-2">Tentang</a>
             <a href="#program" class="block text-slate-700 font-semibold py-2">Program</a>
-            <a href="#kontak" class="block bg-blue-600 text-white text-center py-3 rounded-xl font-bold">Daftar Sekarang</a>
+            <a href="#kontak" class="btn-responsive block bg-blue-600 text-white text-center py-3 rounded-xl font-bold">Daftar Sekarang</a>
         </div>
     </nav>
 
@@ -110,8 +132,8 @@
                         Pelatihan bahasa intensif dan persiapan kerja profesional melalui skema resmi G-to-G Korea & Jepang.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 pt-4 justify-center lg:justify-start">
-                        <a href="#kontak" class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-bold hover:bg-blue-500 transition shadow-xl shadow-blue-900/40 text-center">Daftar Sekarang</a>
-                        <a href="https://lpkkorindo.com/download/lpkorindo.apk" target="_blank" class="bg-white/5 border border-white/10 text-white px-8 py-4 rounded-2xl font-bold hover:bg-white/10 transition flex items-center justify-center gap-3">
+                        <a href="#kontak" class="btn-responsive bg-blue-600 text-white px-8 py-4 rounded-2xl font-bold hover:bg-blue-500 transition shadow-xl shadow-blue-900/40 text-center">Daftar Sekarang</a>
+                        <a href="https://lpkkorindo.com/download/lpkorindo.apk" target="_blank" class="btn-responsive bg-white/5 border border-white/10 text-white px-8 py-4 rounded-2xl font-bold hover:bg-white/10 transition flex items-center justify-center gap-3">
                             <i class="fab fa-google-play"></i> DOWNLOAD APK
                         </a>
                     </div>
@@ -214,7 +236,7 @@
                             Sukalila, Kec. Jatibarang, Kabupaten Indramayu, Jawa Barat 45273.
                         </p>
                     </div>
-                    <a href="https://maps.app.goo.gl/QFMiYgm4oV9UrNeY6" target="_blank" class="bg-white text-blue-600 px-8 py-4 rounded-2xl font-bold text-sm hover:bg-slate-50 transition whitespace-nowrap shadow-lg">
+                    <a href="https://maps.app.goo.gl/QFMiYgm4oV9UrNeY6" target="_blank" class="btn-responsive bg-white text-blue-600 px-8 py-4 rounded-2xl font-bold text-sm hover:bg-slate-50 transition whitespace-nowrap shadow-lg">
                         Buka di Google Maps <i class="fas fa-external-link-alt ml-2"></i>
                     </a>
                 </div>
@@ -235,7 +257,7 @@
                         <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg" alt="Korea" class="flag-icon mb-10">
                         <h3 class="text-3xl font-extrabold text-slate-900 mb-4">EPS Korea Selatan</h3>
                         <p class="text-slate-600 mb-8 leading-relaxed">Persiapan ujian EPS-TOPIK 2026 dengan kurikulum standar HRD Korea.</p>
-                        <a href="#kontak" class="inline-flex items-center gap-3 text-blue-600 font-bold hover:gap-5 transition-all">Ambil Program <i class="fas fa-arrow-right"></i></a>
+                        <a href="#kontak" class="btn-responsive inline-flex items-center gap-3 text-blue-600 font-bold hover:gap-5 transition-all">Ambil Program <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
                 <div class="program-card bg-[#f8fafc] p-10 md:p-14 rounded-[3.5rem] border border-slate-100 group relative overflow-hidden">
@@ -243,7 +265,7 @@
                         <img src="https://upload.wikimedia.org/wikipedia/commons/9/9e/Flag_of_Japan.svg" alt="Jepang" class="flag-icon mb-10">
                         <h3 class="text-3xl font-extrabold text-slate-900 mb-4">Magang Jepang</h3>
                         <p class="text-slate-600 mb-8 leading-relaxed">Pelatihan bahasa Jepang tingkat N5/N4 dan persiapan wawancara user.</p>
-                        <a href="#kontak" class="inline-flex items-center gap-3 text-red-500 font-bold hover:gap-5 transition-all">Ambil Program <i class="fas fa-arrow-right"></i></a>
+                        <a href="#kontak" class="btn-responsive inline-flex items-center gap-3 text-red-500 font-bold hover:gap-5 transition-all">Ambil Program <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -263,11 +285,11 @@
                     <div class="w-full max-w-sm space-y-6 pt-4">
                         <p class="text-xs font-bold text-slate-500 uppercase tracking-[0.2em] mb-2">Ikuti & Hubungi Kami</p>
                         <div class="grid grid-cols-2 gap-3">
-                            <a href="https://wa.me/6287729124990" target="_blank" class="flex items-center justify-center gap-3 px-4 py-4 bg-green-500/10 border border-green-500/20 rounded-2xl text-green-500 font-bold hover:bg-green-500 hover:text-white transition-all duration-300">
+                            <a href="https://wa.me/6287729124990" target="_blank" class="btn-responsive flex items-center justify-center gap-3 px-4 py-4 bg-green-500/10 border border-green-500/20 rounded-2xl text-green-500 font-bold hover:bg-green-500 hover:text-white transition-all duration-300">
                                 <i class="fab fa-whatsapp text-xl"></i>
                                 <span class="text-sm">WhatsApp</span>
                             </a>
-                            <a href="https://web.facebook.com/LPKKORINDO" target="_blank" class="flex items-center justify-center gap-3 px-4 py-4 bg-[#1877F2]/10 border border-[#1877F2]/20 rounded-2xl text-[#1877F2] font-bold hover:bg-[#1877F2] hover:text-white transition-all duration-300">
+                            <a href="https://web.facebook.com/LPKKORINDO" target="_blank" class="btn-responsive flex items-center justify-center gap-3 px-4 py-4 bg-[#1877F2]/10 border border-[#1877F2]/20 rounded-2xl text-[#1877F2] font-bold hover:bg-[#1877F2] hover:text-white transition-all duration-300">
                                 <i class="fab fa-facebook-f text-xl"></i>
                                 <span class="text-sm">Facebook</span>
                             </a>
@@ -288,7 +310,7 @@
                                 <option value="Magang Jepang">Magang Jepang</option>
                             </select>
                         </div>
-                        <button type="submit" class="w-full py-5 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition shadow-xl shadow-blue-200">Kirim via WhatsApp</button>
+                        <button type="submit" class="btn-responsive w-full py-5 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition shadow-xl shadow-blue-200">Kirim via WhatsApp</button>
                     </form>
                 </div>
             </div>
@@ -303,11 +325,19 @@
     </footer>
 
     <!-- WhatsApp Floating Button -->
-    <a href="https://wa.me/6287729124990" target="_blank" class="fixed bottom-8 right-8 z-[100] bg-green-500 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl transition hover:scale-110 hover:rotate-12">
+    <a href="https://wa.me/6287729124990" target="_blank" class="btn-responsive fixed bottom-8 right-8 z-[100] bg-green-500 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl transition hover:scale-110 hover:rotate-12">
         <i class="fab fa-whatsapp text-2xl"></i>
     </a>
 
     <script>
+        // Mematikan Context Menu (Klik Kanan/Tekan Lama) pada semua elemen dengan class btn-responsive
+        document.querySelectorAll('.btn-responsive').forEach(element => {
+            element.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            });
+        });
+
         // Toggle Mobile Menu
         document.getElementById('mobile-menu-button').addEventListener('click', () => {
             document.getElementById('mobile-menu').classList.toggle('hidden');
