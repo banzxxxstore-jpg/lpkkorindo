@@ -22,22 +22,26 @@
         }
         .section-tag {
             display: inline-block;
-            padding: 4px 12px;
+            padding: 6px 16px;
             background: #eff6ff;
             color: #2563eb;
             border-radius: 99px;
             font-size: 0.75rem;
-            font-weight: 700;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
+            margin-bottom: 1.5rem;
         }
-        .program-card {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        .bento-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            border-radius: 2.5rem;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .program-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        .bento-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
         }
         .flag-icon {
             width: 64px;
@@ -48,9 +52,9 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 overflow-x-hidden">
+<body class="bg-[#fafafa] text-slate-900 overflow-x-hidden">
 
-    <!-- Navbar -->
+    <!-- Header / Navigasi -->
     <nav class="fixed w-full z-50 glass border-b border-slate-200/60">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20 items-center">
@@ -64,11 +68,8 @@
                 
                 <div class="hidden md:flex space-x-8 font-semibold text-sm items-center">
                     <a href="#beranda" class="text-slate-600 hover:text-blue-600 transition">Beranda</a>
-                    <a href="#program" class="text-slate-600 hover:text-blue-600 transition">Program</a>
                     <a href="#tentang" class="text-slate-600 hover:text-blue-600 transition">Tentang</a>
-                    <a href="#lokasi" class="text-slate-600 hover:text-red-500 transition flex items-center gap-2">
-                        <i class="fas fa-map-marker-alt"></i> Lokasi
-                    </a>
+                    <a href="#program" class="text-slate-600 hover:text-blue-600 transition">Program</a>
                     <a href="#kontak" class="bg-blue-600 text-white px-6 py-2.5 rounded-full hover:bg-blue-700 transition shadow-lg shadow-blue-200">Daftar Sekarang</a>
                 </div>
 
@@ -82,172 +83,243 @@
         
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 p-6 space-y-4 shadow-xl">
             <a href="#beranda" class="block text-slate-700 font-semibold py-2">Beranda</a>
-            <a href="#program" class="block text-slate-700 font-semibold py-2">Program</a>
             <a href="#tentang" class="block text-slate-700 font-semibold py-2">Tentang</a>
-            <a href="#lokasi" class="block text-slate-700 font-semibold py-2"><i class="fas fa-map-marker-alt mr-2 text-red-500"></i>Lokasi Kami</a>
+            <a href="#program" class="block text-slate-700 font-semibold py-2">Program</a>
             <a href="#kontak" class="block bg-blue-600 text-white text-center py-3 rounded-xl font-bold">Daftar Sekarang</a>
         </div>
     </nav>
 
-    <!-- Hero -->
+    <!-- Hero Section -->
     <section id="beranda" class="relative pt-32 pb-16 md:pt-48 md:pb-24 hero-gradient text-white overflow-hidden">
         <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <div class="text-center lg:text-left space-y-6">
-                    <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-[10px] md:text-xs font-bold uppercase tracking-wider mx-auto lg:mx-0">
+                <div class="space-y-8 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-[10px] md:text-xs font-bold uppercase tracking-wider">
                         <span class="flex h-2 w-2 rounded-full bg-green-400 animate-pulse"></span>
                         Pendaftaran Angkatan 2026 Dibuka
                     </div>
-                    <h1 class="text-4xl md:text-6xl font-extrabold leading-[1.1]">
-                        Masa Depan Cerah di <br>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Korea & Jepang</span>
+                    <h1 class="text-5xl md:text-7xl font-extrabold leading-[1.1]">
+                        Wujudkan <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Karir Global</span>
                     </h1>
-                    <p class="text-base md:text-lg text-slate-300 leading-relaxed max-w-xl mx-auto lg:mx-0">
-                        Pelatihan bahasa intensif dan persiapan kerja profesional melalui skema resmi G-to-G. Kami bimbing hingga Anda sukses berkarir di luar negeri.
+                    <p class="text-lg md:text-xl text-slate-300 leading-relaxed max-w-xl mx-auto lg:mx-0">
+                        Pelatihan bahasa intensif dan persiapan kerja profesional melalui skema resmi G-to-G Korea & Jepang.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 pt-4 justify-center lg:justify-start">
-                        <a href="#kontak" class="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-500 transition shadow-xl shadow-blue-900/40 text-center">Mulai Konsultasi</a>
-                        <a href="https://lpkkorindo.com/download/lpkorindo.apk" target="_blank" class="bg-[#0a1128] border border-white/10 text-white px-8 py-4 rounded-xl font-bold hover:bg-[#15234b] transition flex items-center justify-center gap-3">
-                            <img src="https://www.image2url.com/r2/default/images/1776939883449-2a93d125-ed44-4e84-8846-791ad1edd879.jpg" alt="Logo" class="h-5 w-auto">
-                            DOWNLOAD APK UBT
+                        <a href="#kontak" class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-bold hover:bg-blue-500 transition shadow-xl shadow-blue-900/40 text-center">Daftar Sekarang</a>
+                        <a href="https://lpkkorindo.com/download/lpkorindo.apk" target="_blank" class="bg-white/5 border border-white/10 text-white px-8 py-4 rounded-2xl font-bold hover:bg-white/10 transition flex items-center justify-center gap-3">
+                            <i class="fab fa-google-play"></i> DOWNLOAD APK
                         </a>
                     </div>
                 </div>
-                <div class="relative mt-8 lg:mt-0">
-                    <div class="absolute -inset-4 bg-blue-500/20 blur-3xl rounded-full"></div>
-                    <div class="relative bg-white/5 p-2 rounded-[2.5rem] border border-white/10 backdrop-blur-sm">
-                        <img src="https://www.image2url.com/r2/default/images/1776939981383-200a4a53-b9c5-471b-9abc-73cb56ececd2.jpg" alt="[Kebersamaan LPK Korindo di Pantai]" class="rounded-[2rem] shadow-2xl w-full h-auto">
+                
+                <div class="relative group">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-[3rem] blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                    <div class="relative bg-slate-900 ring-1 ring-white/10 rounded-[3rem] overflow-hidden shadow-2xl">
+                        <img src="https://www.image2url.com/r2/default/images/1776939981383-200a4a53-b9c5-471b-9abc-73cb56ececd2.jpg" alt="[Kebersamaan Siswa LPK Korindo]" class="w-full h-full object-cover transform transition duration-500 hover:scale-105">
+                    </div>
+                    <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-[2rem] shadow-2xl hidden md:block">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                                <i class="fas fa-users text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-black text-slate-900 leading-none">1.000+</p>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase mt-1 tracking-widest">Alumni Sukses</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Program -->
-    <section id="program" class="py-20 bg-white">
+    <!-- Tentang LPK Korindo -->
+    <section id="tentang" class="py-24 md:py-32 bg-[#fafafa]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <span class="section-tag">Program Unggulan 2026</span>
-                <h2 class="text-3xl md:text-5xl font-extrabold text-slate-900">Pilih Jalur Karirmu</h2>
+            <div class="text-center max-w-4xl mx-auto mb-20">
+                <span class="section-tag">Mengenal Kami</span>
+                <h2 class="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">
+                    Pusat Pelatihan <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Kerja Profesional</span>
+                </h2>
+                <p class="text-lg md:text-xl text-slate-600 leading-relaxed font-medium">
+                    LPK Korindo Indramayu merupakan lembaga kursus, program yang dikembangkan adalah bahasa Korea dan bahasa jepang, khususnya untuk calon pekerja migran Indonesia yang ingin mengikuti Program G to G (goverment to goverment) Korea Selatan dan Jepang, yakni program kerjasama antara pemerintah Indonesia dengan pemerintah Korea Selatan.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                <!-- Info Utama -->
+                <div class="md:col-span-7 bento-card p-10 md:p-14 flex flex-col justify-center">
+                    <div class="mb-6 flex gap-2">
+                        <span class="h-1.5 w-12 bg-blue-600 rounded-full"></span>
+                        <span class="h-1.5 w-4 bg-slate-200 rounded-full"></span>
+                    </div>
+                    <h3 class="text-2xl md:text-3xl font-extrabold mb-6 text-slate-900 leading-snug">
+                        Membangun Masa Depan Sejak 2010.
+                    </h3>
+                    <p class="text-slate-600 leading-relaxed text-lg mb-8">
+                        Didirikan sejak tahun 2010 yang berlokasi di kelurahan Sukalila Kecamatan Jatibarang Kabupaten Indramayu. Kami fokus memberikan bimbingan terbaik agar setiap siswa memiliki kompetensi standar internasional.
+                    </p>
+                    <div class="grid grid-cols-2 gap-6 pt-6 border-t border-slate-100">
+                        <div>
+                            <p class="text-3xl font-black text-blue-600">14+</p>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Tahun Pengalaman</p>
+                        </div>
+                        <div>
+                            <p class="text-3xl font-black text-slate-900">G-to-G</p>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Sistem Resmi</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visi Misi -->
+                <div class="md:col-span-5 bento-card bg-slate-900 p-10 md:p-12 text-white relative overflow-hidden group">
+                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-blue-600/20 rounded-full blur-3xl group-hover:bg-blue-600/30 transition"></div>
+                    <h4 class="text-xl font-bold mb-8 flex items-center gap-3">
+                        <i class="fas fa-bullseye text-blue-400"></i> Visi dan Misi
+                    </h4>
+                    <div class="space-y-5">
+                        <div class="flex gap-4">
+                            <i class="fas fa-check-circle text-blue-500 mt-1"></i>
+                            <p class="text-slate-300 text-sm leading-relaxed">Menjadi suatu lembaga yang unggul dan memiliki integritas tinggi.</p>
+                        </div>
+                        <div class="flex gap-4">
+                            <i class="fas fa-check-circle text-blue-500 mt-1"></i>
+                            <p class="text-slate-300 text-sm leading-relaxed">Mendidik siswa agar memiliki kemampuan bahasa korea yang baik dan benar.</p>
+                        </div>
+                        <div class="flex gap-4">
+                            <i class="fas fa-check-circle text-blue-500 mt-1"></i>
+                            <p class="text-slate-300 text-sm leading-relaxed">Mengembangkan program, sarana dan prasarana pelatihan sesuai dengan kebutuhan dan permintaan dari pengguna jasa.</p>
+                        </div>
+                        <div class="flex gap-4">
+                            <i class="fas fa-check-circle text-blue-500 mt-1"></i>
+                            <p class="text-slate-300 text-sm leading-relaxed">Meningkatkan Sumber Daya Manusia dan perekonomian masyarakat.</p>
+                        </div>
+                        <div class="flex gap-4">
+                            <i class="fas fa-check-circle text-blue-500 mt-1"></i>
+                            <p class="text-slate-300 text-sm leading-relaxed">Melaksanakan pelatihan berbasis kompetensi serta melaksanakan Uji Kompetensi (UJK) dalam rangka penempatan kelulusan.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alamat -->
+                <div class="md:col-span-12 bento-card bg-blue-600 p-10 text-white flex flex-col md:flex-row justify-between items-center gap-8 shadow-xl shadow-blue-200">
+                    <div class="flex-1">
+                        <h4 class="text-2xl font-bold mb-3">Kunjungi Kantor Kami</h4>
+                        <p class="text-blue-100 text-sm md:text-base leading-relaxed opacity-90">
+                            Sukalila, Kec. Jatibarang, Kabupaten Indramayu, Jawa Barat 45273.
+                        </p>
+                    </div>
+                    <a href="https://maps.app.goo.gl/QFMiYgm4oV9UrNeY6" target="_blank" class="bg-white text-blue-600 px-8 py-4 rounded-2xl font-bold text-sm hover:bg-slate-50 transition whitespace-nowrap shadow-lg">
+                        Buka di Google Maps <i class="fas fa-external-link-alt ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Program Section -->
+    <section id="program" class="py-24 md:py-32 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20">
+                <span class="section-tag">Program Unggulan</span>
+                <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">Pilih Destinasi Karirmu</h2>
             </div>
             <div class="grid md:grid-cols-2 gap-8">
-                <div class="program-card bg-slate-50 p-8 rounded-[3rem] shadow-sm border border-slate-200">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg" alt="Korea" class="flag-icon mb-8">
-                    <h3 class="text-2xl font-extrabold mb-4">G-to-G Korea Selatan</h3>
-                    <p class="text-slate-600 mb-8">Persiapan EPS-TOPIK 2026 dengan kurikulum standar serta bimbingan pendaftaran akun BP2MI.</p>
-                    <a href="#kontak" class="text-blue-600 font-extrabold flex items-center gap-2">Daftar Korea <i class="fas fa-arrow-right"></i></a>
-                </div>
-                <div class="program-card bg-slate-50 p-8 rounded-[3rem] shadow-sm border border-slate-200">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/9e/Flag_of_Japan.svg" alt="Jepang" class="flag-icon mb-8">
-                    <h3 class="text-2xl font-extrabold mb-4">Magang Jepang</h3>
-                    <p class="text-slate-600 mb-8">Pelatihan bahasa Jepang tingkat dasar N5/N4 dan persiapan wawancara dengan perusahaan Jepang.</p>
-                    <a href="#kontak" class="text-red-500 font-extrabold flex items-center gap-2">Daftar Jepang <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Tentang -->
-    <section id="tentang" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
-                <div class="space-y-6">
-                    <span class="section-tag">Tentang Kami</span>
-                    <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900">Pusat Pelatihan Kerja Terpercaya di Indramayu</h2>
-                    <p class="text-slate-600 leading-relaxed">
-                        LPK Korindo hadir sebagai jembatan bagi putra-putri daerah untuk meraih impian bekerja di Korea Selatan dan Jepang. Dengan instruktur berpengalaman dan fasilitas yang memadai, kami memastikan setiap siswa siap menghadapi dunia kerja internasional.
-                    </p>
-                    <ul class="space-y-4">
-                        <li class="flex items-center gap-3 font-semibold text-slate-700">
-                            <i class="fas fa-check-circle text-blue-600"></i> Instruktur Berpengalaman (Eks-Korea/Jepang)
-                        </li>
-                        <li class="flex items-center gap-3 font-semibold text-slate-700">
-                            <i class="fas fa-check-circle text-blue-600"></i> Simulasi Ujian CBT & UBT Modern
-                        </li>
-                        <li class="flex items-center gap-3 font-semibold text-slate-700">
-                            <i class="fas fa-check-circle text-blue-600"></i> Bimbingan Administrasi Hingga Terbang
-                        </li>
-                    </ul>
-                </div>
-                <div class="bg-blue-600 rounded-[3rem] p-1 overflow-hidden">
-                    <img src="https://www.image2url.com/r2/default/images/1776939981383-200a4a53-b9c5-471b-9abc-73cb56ececd2.jpg" alt="[Pelatihan LPK Korindo]" class="rounded-[2.9rem] opacity-90">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Lokasi -->
-    <section id="lokasi" class="py-20 bg-slate-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <span class="section-tag">Kunjungi Kantor Kami</span>
-            <h2 class="text-3xl font-extrabold mb-12">Lokasi Strategis</h2>
-            <div class="bg-white p-4 rounded-[3rem] shadow-xl border border-slate-200 h-[450px] relative overflow-hidden">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.3409419131976!2d108.30397577402636!3d-6.349887562124584!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6eb942f7c223c7%3A0xc3910c754d9203f5!2sSukalila%2C%20Jatibarang%2C%20Indramayu%20Regency%2C%20West%20Java%2045273!5e0!3m2!1sen!2sid!4v1713880000000!5m2!1sen!2sid" class="w-full h-full border-0 rounded-[2.5rem]" allowfullscreen="" loading="lazy"></iframe>
-            </div>
-        </div>
-    </section>
-
-    <!-- Kontak -->
-    <section id="kontak" class="py-16 md:py-32 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-slate-900 rounded-[3rem] md:rounded-[4rem] p-8 md:p-20 flex flex-col lg:flex-row items-center gap-16">
-                <div class="flex-1 text-white">
-                    <h2 class="text-3xl md:text-5xl font-extrabold">Siap Mulai Langkahmu?</h2>
-                    <p class="text-slate-400 mt-4 text-lg">Hubungi admin kami untuk konsultasi gratis mengenai alur kerja luar negeri.</p>
-                    <div class="mt-8 flex items-center gap-4">
-                        <div class="w-12 h-12 bg-blue-600/20 rounded-full flex items-center justify-center text-blue-400">
-                            <i class="fas fa-phone-alt"></i>
-                        </div>
-                        <span class="text-xl font-bold">0877-2912-4990</span>
+                <div class="program-card bg-[#f8fafc] p-10 md:p-14 rounded-[3.5rem] border border-slate-100 group relative overflow-hidden">
+                    <div class="relative z-10">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg" alt="Korea" class="flag-icon mb-10">
+                        <h3 class="text-3xl font-extrabold text-slate-900 mb-4">EPS Korea Selatan</h3>
+                        <p class="text-slate-600 mb-8 leading-relaxed">Persiapan ujian EPS-TOPIK 2026 dengan kurikulum standar HRD Korea.</p>
+                        <a href="#kontak" class="inline-flex items-center gap-3 text-blue-600 font-bold hover:gap-5 transition-all">Ambil Program <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
-                <div class="w-full lg:w-[450px] bg-white p-8 rounded-[2.5rem] shadow-2xl">
+                <div class="program-card bg-[#f8fafc] p-10 md:p-14 rounded-[3.5rem] border border-slate-100 group relative overflow-hidden">
+                    <div class="relative z-10">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/9/9e/Flag_of_Japan.svg" alt="Jepang" class="flag-icon mb-10">
+                        <h3 class="text-3xl font-extrabold text-slate-900 mb-4">Magang Jepang</h3>
+                        <p class="text-slate-600 mb-8 leading-relaxed">Pelatihan bahasa Jepang tingkat N5/N4 dan persiapan wawancara user.</p>
+                        <a href="#kontak" class="inline-flex items-center gap-3 text-red-500 font-bold hover:gap-5 transition-all">Ambil Program <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kontak Section -->
+    <section id="kontak" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-slate-900 rounded-[4rem] p-10 md:p-20 grid lg:grid-cols-2 gap-16 items-center overflow-hidden relative">
+                <div class="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-transparent"></div>
+                
+                <div class="relative z-10 text-white space-y-8 text-center lg:text-left flex flex-col items-center lg:items-start">
+                    <h2 class="text-4xl md:text-6xl font-extrabold leading-tight">Hubungi Kami</h2>
+                    <p class="text-slate-400 text-lg max-w-md">Konsultasikan masa depanmu bersama admin LPK Korindo melalui formulir cepat ini.</p>
+                    
+                    <div class="flex items-center gap-4 p-5 bg-white/5 rounded-3xl border border-white/10 w-fit hover:bg-white/10 transition duration-300">
+                        <i class="fab fa-whatsapp text-green-400 text-4xl"></i>
+                        <div class="text-left">
+                            <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">WhatsApp Admin</p>
+                            <p class="text-xl font-bold">+62 877-2912-4990</p>
+                        </div>
+                    </div>
+
+                    <div class="pt-4">
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-[0.2em] mb-4">Ikuti Kami</p>
+                        <a href="https://web.facebook.com/LPKKORINDO" target="_blank" class="flex items-center gap-3 px-6 py-3 bg-[#1877F2]/10 border border-[#1877F2]/20 rounded-2xl text-[#1877F2] font-bold hover:bg-[#1877F2] hover:text-white transition-all duration-300">
+                            <i class="fab fa-facebook-f"></i>
+                            <span>Facebook LPK Korindo</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="relative z-10 bg-white p-10 rounded-[3rem] shadow-2xl">
                     <form id="contactForm" class="space-y-6">
                         <div class="space-y-2">
-                            <label class="text-xs font-bold text-slate-500 uppercase">Nama Lengkap</label>
-                            <input type="text" id="formNama" class="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-600 transition" placeholder="Contoh: Budi Sudarsono" required>
+                            <label class="text-xs font-black uppercase tracking-widest text-slate-400">Nama Lengkap</label>
+                            <input type="text" id="formNama" class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:border-blue-600 transition" placeholder="Masukkan nama..." required>
                         </div>
                         <div class="space-y-2">
-                            <label class="text-xs font-bold text-slate-500 uppercase">Tujuan Karir</label>
-                            <select id="formTujuan" class="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-600 transition">
-                                <option value="Korea Selatan">Korea Selatan (G-to-G)</option>
-                                <option value="Jepang">Jepang (Magang/SSW)</option>
+                            <label class="text-xs font-black uppercase tracking-widest text-slate-400">Pilih Negara</label>
+                            <select id="formTujuan" class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:border-blue-600 transition">
+                                <option value="G-to-G Korea Selatan">G-to-G Korea Selatan</option>
+                                <option value="Magang Jepang">Magang Jepang</option>
                             </select>
                         </div>
-                        <button type="submit" class="w-full py-5 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition shadow-xl shadow-blue-200">Kirim ke WhatsApp</button>
+                        <button type="submit" class="w-full py-5 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition shadow-xl shadow-blue-200">Kirim via WhatsApp</button>
                     </form>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-slate-50 py-12 border-t border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p class="text-slate-500 text-sm font-medium">© 2026 LPK Korindo Indramayu. Semua Hak Dilindungi.</p>
+    <footer class="bg-[#fafafa] py-12 text-slate-400 border-t border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+            <img src="https://www.image2url.com/r2/default/images/1776939883449-2a93d125-ed44-4e84-8846-791ad1edd879.jpg" alt="Logo LPK Korindo Footer" class="h-8 mx-auto grayscale opacity-50">
+            <p class="text-[10px] font-bold uppercase tracking-[0.2em]">&copy; 2026 LPK Korindo Indramayu. Powered by Modern Education.</p>
         </div>
     </footer>
 
-    <!-- Floating WA -->
-    <a href="https://wa.me/6287729124990" target="_blank" class="fixed bottom-6 right-6 z-[100] bg-green-500 text-white w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center shadow-2xl border-4 border-white transition hover:scale-110">
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/6287729124990" target="_blank" class="fixed bottom-8 right-8 z-[100] bg-green-500 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl transition hover:scale-110 hover:rotate-12">
         <i class="fab fa-whatsapp text-2xl"></i>
     </a>
 
     <script>
-        // Menu Mobile Toggle
-        document.getElementById('mobile-menu-button').onclick = () => {
+        // Toggle Mobile Menu
+        document.getElementById('mobile-menu-button').addEventListener('click', () => {
             document.getElementById('mobile-menu').classList.toggle('hidden');
-        };
+        });
 
-        // Form WhatsApp Handler
-        document.getElementById('contactForm').onsubmit = (e) => {
+        // WhatsApp Form Logic
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const nama = document.getElementById('formNama').value;
             const tujuan = document.getElementById('formTujuan').value;
-            const msg = `Halo Admin Korindo, saya *${nama}* ingin berkonsultasi mengenai program *${tujuan}*. Mohon informasi alur pendaftarannya.`;
-            window.open(`https://wa.me/6287729124990?text=${encodeURIComponent(msg)}`, '_blank');
-        };
+            const phone = "6287729124990";
+            const message = `Assalamu'alaikum Warahmatullahi Wabarakatuh, Admin LPK Korindo. %0A%0ANama saya *${nama}*. Saya tertarik untuk mengikuti program *${tujuan}*. %0A%0AMohon informasinya, apa saja persyaratan yang harus saya siapkan untuk pendaftaran? Terima kasih.`;
+            window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+        });
     </script>
 </body>
 </html>
