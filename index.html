@@ -46,71 +46,6 @@
             object-fit: cover;
             box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
-        #ai-chat-window {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            transform: translateY(20px);
-            opacity: 0;
-            pointer-events: none;
-        }
-        #ai-chat-window.active {
-            transform: translateY(0);
-            opacity: 1;
-            pointer-events: all;
-        }
-        .chat-bubble-user {
-            background: #2563eb;
-            color: white;
-            border-radius: 18px 18px 2px 18px;
-        }
-        .chat-bubble-ai {
-            background: #f1f5f9;
-            color: #1e293b;
-            border-radius: 18px 18px 18px 2px;
-        }
-        .typing-dot {
-            width: 6px;
-            height: 6px;
-            background: #94a3b8;
-            border-radius: 50%;
-            animation: bounce 1.4s infinite ease-in-out;
-        }
-        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes bounce {
-            0%, 80%, 1000% { transform: scale(0); }
-            40% { transform: scale(1); }
-        }
-        .roadmap-step {
-            position: relative;
-            padding-left: 2.5rem;
-            border-left: 2px dashed #e2e8f0;
-            padding-bottom: 2rem;
-        }
-        .roadmap-step::before {
-            content: '';
-            position: absolute;
-            left: -9px;
-            top: 0;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #2563eb;
-            border: 4px solid white;
-        }
-        #image-preview-container {
-            display: none;
-            padding: 8px;
-            background: #f8fafc;
-            border-top: 1px solid #e2e8f0;
-            position: relative;
-        }
-        #image-preview-img {
-            height: 60px;
-            width: 60px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 2px solid #2563eb;
-        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 overflow-x-hidden">
@@ -130,7 +65,6 @@
                 <div class="hidden md:flex space-x-8 font-semibold text-sm items-center">
                     <a href="#beranda" class="text-slate-600 hover:text-blue-600 transition">Beranda</a>
                     <a href="#program" class="text-slate-600 hover:text-blue-600 transition">Program</a>
-                    <a href="#ai-roadmap" class="text-blue-600 hover:text-blue-800 transition flex items-center gap-1">✨ Karir AI</a>
                     <a href="#tentang" class="text-slate-600 hover:text-blue-600 transition">Tentang</a>
                     <a href="#lokasi" class="text-slate-600 hover:text-red-500 transition flex items-center gap-2">
                         <i class="fas fa-map-marker-alt"></i> Lokasi
@@ -149,7 +83,6 @@
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 p-6 space-y-4 shadow-xl">
             <a href="#beranda" class="block text-slate-700 font-semibold py-2">Beranda</a>
             <a href="#program" class="block text-slate-700 font-semibold py-2">Program</a>
-            <a href="#ai-roadmap" class="block text-blue-600 font-semibold py-2">✨ Karir AI</a>
             <a href="#tentang" class="block text-slate-700 font-semibold py-2">Tentang</a>
             <a href="#lokasi" class="block text-slate-700 font-semibold py-2"><i class="fas fa-map-marker-alt mr-2 text-red-500"></i>Lokasi Kami</a>
             <a href="#kontak" class="block bg-blue-600 text-white text-center py-3 rounded-xl font-bold">Daftar Sekarang</a>
@@ -191,50 +124,6 @@
         </div>
     </section>
 
-    <!-- AI Roadmap -->
-    <section id="ai-roadmap" class="py-20 bg-white">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <span class="section-tag">Fitur Cerdas</span>
-                <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900">✨ AI Career Roadmap</h2>
-                <p class="text-slate-600 mt-4">Biarkan AI kami menyusun rencana karir luar negeri Anda secara instan.</p>
-            </div>
-            <div class="bg-slate-50 p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
-                <div class="grid md:grid-cols-2 gap-6 mb-8">
-                    <div class="space-y-2">
-                        <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Negara Tujuan</label>
-                        <select id="roadmap-country" class="w-full px-5 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-600 transition">
-                            <option value="Korea Selatan">Korea Selatan (G-to-G)</option>
-                            <option value="Jepang">Jepang (Magang/SSW)</option>
-                        </select>
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Bidang Pekerjaan</label>
-                        <select id="roadmap-sector" class="w-full px-5 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-600 transition">
-                            <option value="Manufaktur/Pabrik">Manufaktur/Pabrik</option>
-                            <option value="Perikanan/Fishing">Perikanan/Fishing</option>
-                            <option value="Konstruksi">Konstruksi</option>
-                            <option value="Pertanian">Pertanian</option>
-                        </select>
-                    </div>
-                </div>
-                <button onclick="generateRoadmap()" id="btn-roadmap" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-bold rounded-xl hover:opacity-90 transition shadow-xl shadow-blue-200 flex items-center justify-center gap-3">
-                    <i class="fas fa-wand-magic-sparkles"></i>
-                    <span>✨ Buat Rencana Karir Saya</span>
-                </button>
-                <div id="roadmap-output" class="mt-10 hidden">
-                    <div class="bg-white p-8 rounded-3xl border border-blue-100 shadow-inner">
-                        <div id="roadmap-content" class="space-y-1"></div>
-                    </div>
-                </div>
-                <div id="roadmap-loading" class="mt-10 hidden text-center py-10">
-                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-t-transparent mb-4"></div>
-                    <p class="text-slate-500 font-medium">✨ AI sedang menganalisis jalur terbaik...</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Program -->
     <section id="program" class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -246,14 +135,43 @@
                 <div class="program-card bg-slate-50 p-8 rounded-[3rem] shadow-sm border border-slate-200">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg" alt="Korea" class="flag-icon mb-8">
                     <h3 class="text-2xl font-extrabold mb-4">G-to-G Korea Selatan</h3>
-                    <p class="text-slate-600 mb-8">Persiapan EPS-TOPIK 2026 dengan kurikulum standar.</p>
+                    <p class="text-slate-600 mb-8">Persiapan EPS-TOPIK 2026 dengan kurikulum standar serta bimbingan pendaftaran akun BP2MI.</p>
                     <a href="#kontak" class="text-blue-600 font-extrabold flex items-center gap-2">Daftar Korea <i class="fas fa-arrow-right"></i></a>
                 </div>
                 <div class="program-card bg-slate-50 p-8 rounded-[3rem] shadow-sm border border-slate-200">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/9/9e/Flag_of_Japan.svg" alt="Jepang" class="flag-icon mb-8">
                     <h3 class="text-2xl font-extrabold mb-4">Magang Jepang</h3>
-                    <p class="text-slate-600 mb-8">Pelatihan bahasa Jepang tingkat dasar N5/N4.</p>
+                    <p class="text-slate-600 mb-8">Pelatihan bahasa Jepang tingkat dasar N5/N4 dan persiapan wawancara dengan perusahaan Jepang.</p>
                     <a href="#kontak" class="text-red-500 font-extrabold flex items-center gap-2">Daftar Jepang <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tentang -->
+    <section id="tentang" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="space-y-6">
+                    <span class="section-tag">Tentang Kami</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900">Pusat Pelatihan Kerja Terpercaya di Indramayu</h2>
+                    <p class="text-slate-600 leading-relaxed">
+                        LPK Korindo hadir sebagai jembatan bagi putra-putri daerah untuk meraih impian bekerja di Korea Selatan dan Jepang. Dengan instruktur berpengalaman dan fasilitas yang memadai, kami memastikan setiap siswa siap menghadapi dunia kerja internasional.
+                    </p>
+                    <ul class="space-y-4">
+                        <li class="flex items-center gap-3 font-semibold text-slate-700">
+                            <i class="fas fa-check-circle text-blue-600"></i> Instruktur Berpengalaman (Eks-Korea/Jepang)
+                        </li>
+                        <li class="flex items-center gap-3 font-semibold text-slate-700">
+                            <i class="fas fa-check-circle text-blue-600"></i> Simulasi Ujian CBT & UBT Modern
+                        </li>
+                        <li class="flex items-center gap-3 font-semibold text-slate-700">
+                            <i class="fas fa-check-circle text-blue-600"></i> Bimbingan Administrasi Hingga Terbang
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-blue-600 rounded-[3rem] p-1 overflow-hidden">
+                    <img src="https://www.image2url.com/r2/default/images/1776939981383-200a4a53-b9c5-471b-9abc-73cb56ececd2.jpg" alt="[Pelatihan LPK Korindo]" class="rounded-[2.9rem] opacity-90">
                 </div>
             </div>
         </div>
@@ -276,63 +194,40 @@
             <div class="bg-slate-900 rounded-[3rem] md:rounded-[4rem] p-8 md:p-20 flex flex-col lg:flex-row items-center gap-16">
                 <div class="flex-1 text-white">
                     <h2 class="text-3xl md:text-5xl font-extrabold">Siap Mulai Langkahmu?</h2>
-                    <p class="text-slate-400 mt-4">Hubungi admin kami di 0877-2912-4990.</p>
+                    <p class="text-slate-400 mt-4 text-lg">Hubungi admin kami untuk konsultasi gratis mengenai alur kerja luar negeri.</p>
+                    <div class="mt-8 flex items-center gap-4">
+                        <div class="w-12 h-12 bg-blue-600/20 rounded-full flex items-center justify-center text-blue-400">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <span class="text-xl font-bold">0877-2912-4990</span>
+                    </div>
                 </div>
                 <div class="w-full lg:w-[450px] bg-white p-8 rounded-[2.5rem] shadow-2xl">
                     <form id="contactForm" class="space-y-6">
-                        <input type="text" id="formNama" class="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none" placeholder="Nama Lengkap" required>
-                        <select id="formTujuan" class="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none">
-                            <option value="Korea Selatan">Korea Selatan</option>
-                            <option value="Jepang">Jepang</option>
-                        </select>
-                        <button type="submit" class="w-full py-5 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition">Kirim ke WhatsApp</button>
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-500 uppercase">Nama Lengkap</label>
+                            <input type="text" id="formNama" class="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-600 transition" placeholder="Contoh: Budi Sudarsono" required>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-500 uppercase">Tujuan Karir</label>
+                            <select id="formTujuan" class="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-600 transition">
+                                <option value="Korea Selatan">Korea Selatan (G-to-G)</option>
+                                <option value="Jepang">Jepang (Magang/SSW)</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="w-full py-5 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition shadow-xl shadow-blue-200">Kirim ke WhatsApp</button>
                     </form>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- AI Chatbot Floating UI -->
-    <div class="fixed bottom-24 right-6 z-[99] flex flex-col items-end gap-4">
-        <div id="ai-chat-window" class="w-[320px] md:w-[380px] h-[550px] bg-white rounded-[2rem] shadow-2xl flex flex-col overflow-hidden border border-slate-200">
-            <div class="p-5 bg-blue-600 text-white flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <img src="https://www.image2url.com/r2/default/images/1776939883449-2a93d125-ed44-4e84-8846-791ad1edd879.jpg" class="w-10 h-10 bg-white rounded-xl p-1">
-                    <div>
-                        <p class="font-bold text-sm">Korindo AI Assistant</p>
-                        <p id="chat-timer" class="text-[9px] text-blue-100 font-bold uppercase tracking-widest">Sesi Aktif: 03:00</p>
-                    </div>
-                </div>
-                <button onclick="toggleChat()"><i class="fas fa-times text-xl"></i></button>
-            </div>
-            <div id="chat-messages" class="flex-1 overflow-y-auto p-5 space-y-4 bg-slate-50/50 flex flex-col">
-                <div class="chat-bubble-ai p-4 text-sm max-w-[85%]">Halo! Saya asisten LPK Korindo bertenaga AI. Ingin tanya info pendaftaran atau program Korea/Jepang?</div>
-            </div>
-            <div id="typing-indicator" class="hidden px-5 py-2">
-                <div class="flex gap-1"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>
-            </div>
-            <div id="image-preview-container" class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <img id="image-preview-img" src="" class="h-10 w-10 object-cover rounded">
-                    <p class="text-[10px] text-slate-500 italic">Foto siap dianalisis.</p>
-                </div>
-                <button onclick="clearImagePreview()" class="text-red-500 p-2"><i class="fas fa-trash"></i></button>
-            </div>
-            <div class="p-4 bg-white border-t">
-                <form id="ai-chat-form" class="flex items-center gap-2">
-                    <label class="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center cursor-pointer border border-slate-200">
-                        <i class="fas fa-camera text-slate-500"></i>
-                        <input type="file" id="file-input" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
-                    </label>
-                    <input type="text" id="ai-input" placeholder="Tanya sesuatu..." class="flex-1 px-4 py-2.5 bg-slate-100 rounded-xl text-sm outline-none">
-                    <button type="submit" class="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center"><i class="fas fa-paper-plane text-xs"></i></button>
-                </form>
-            </div>
+    <!-- Footer -->
+    <footer class="bg-slate-50 py-12 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-slate-500 text-sm font-medium">© 2026 LPK Korindo Indramayu. Semua Hak Dilindungi.</p>
         </div>
-        <button onclick="toggleChat()" class="bg-blue-600 text-white w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center shadow-2xl border-4 border-white transition hover:scale-110">
-            <i class="fas fa-robot text-2xl"></i>
-        </button>
-    </div>
+    </footer>
 
     <!-- Floating WA -->
     <a href="https://wa.me/6287729124990" target="_blank" class="fixed bottom-6 right-6 z-[100] bg-green-500 text-white w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center shadow-2xl border-4 border-white transition hover:scale-110">
@@ -340,204 +235,19 @@
     </a>
 
     <script>
-        // API Configuration - MEMAKSA PENGGUNAAN MODEL TERBARU
-        const apiKey = ""; 
-        const modelName = "gemini-2.5-flash-preview-09-2025";
-        
-        let isAuthorized = false;
-        let isWaitingForCode = false;
-        let countdownTimer = null;
-        let secondsLeft = 180;
-        let selectedFileBase64 = null;
-        let selectedFileType = null;
+        // Menu Mobile Toggle
+        document.getElementById('mobile-menu-button').onclick = () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        };
 
-        const systemPrompt = "Anda adalah asisten cerdas LPK Korindo Indramayu. Tugas utama Anda adalah membantu calon siswa mendaftar ke Korea (G-to-G) atau Jepang (Magang/SSW). Fokus pada pendaftaran angkatan 2026. Jika siswa mengirimkan gambar soal bahasa Korea/Jepang, bantu jelaskan jawabannya secara mendetail. Selalu bersikap ramah dan profesional. Jawab dalam bahasa Indonesia yang mudah dimengerti.";
-
-        document.getElementById('mobile-menu-button').onclick = () => document.getElementById('mobile-menu').classList.toggle('hidden');
-
+        // Form WhatsApp Handler
         document.getElementById('contactForm').onsubmit = (e) => {
             e.preventDefault();
-            const msg = `Halo Admin Korindo, saya *${document.getElementById('formNama').value}* ingin info program *${document.getElementById('formTujuan').value}*.`;
+            const nama = document.getElementById('formNama').value;
+            const tujuan = document.getElementById('formTujuan').value;
+            const msg = `Halo Admin Korindo, saya *${nama}* ingin berkonsultasi mengenai program *${tujuan}*. Mohon informasi alur pendaftarannya.`;
             window.open(`https://wa.me/6287729124990?text=${encodeURIComponent(msg)}`, '_blank');
         };
-
-        function toggleChat() {
-            document.getElementById('ai-chat-window').classList.toggle('active');
-            resetTimer();
-        }
-
-        function resetTimer() {
-            clearInterval(countdownTimer);
-            secondsLeft = 180;
-            countdownTimer = setInterval(() => {
-                secondsLeft--;
-                const m = Math.floor(secondsLeft / 60);
-                const s = secondsLeft % 60;
-                document.getElementById('chat-timer').innerText = `Sesi Aktif: ${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-                if(secondsLeft <= 0) {
-                    clearInterval(countdownTimer);
-                }
-            }, 1000);
-        }
-
-        function handleFileSelect(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            if(!isAuthorized) {
-                isWaitingForCode = true;
-                addMessage("🔒 Fitur foto hanya untuk siswa. Masukkan KODE AKSES:", 'ai');
-                return;
-            }
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                selectedFileBase64 = e.target.result.split(',')[1];
-                selectedFileType = file.type;
-                document.getElementById('image-preview-img').src = e.target.result;
-                document.getElementById('image-preview-container').style.display = 'flex';
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function clearImagePreview() {
-            selectedFileBase64 = null;
-            document.getElementById('image-preview-container').style.display = 'none';
-            document.getElementById('file-input').value = "";
-        }
-
-        function addMessage(text, role, img = null) {
-            const messagesContainer = document.getElementById('chat-messages');
-            const div = document.createElement('div');
-            div.className = role === 'user' ? "chat-bubble-user p-4 text-sm max-w-[85%] self-end ml-auto shadow-sm" : "chat-bubble-ai p-4 text-sm max-w-[85%] self-start shadow-sm";
-            
-            if(img) {
-                const i = document.createElement('img');
-                i.src = img;
-                i.className = "rounded-lg mb-2 w-full max-h-48 object-cover cursor-pointer";
-                i.onclick = () => window.open(img, '_blank');
-                div.appendChild(i);
-            }
-            
-            const p = document.createElement('p');
-            p.innerText = text;
-            div.appendChild(p);
-            messagesContainer.appendChild(div);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-
-        async function fetchWithRetry(url, options, retries = 5, delay = 1000) {
-            try {
-                const response = await fetch(url, options);
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    // Jika error 404 pada model tertentu, ini adalah indikasi model name tidak cocok
-                    if (response.status === 404) {
-                        throw new Error(`Model ${modelName} tidak tersedia. Silakan hubungi pengembang.`);
-                    }
-                    if (retries > 0 && (response.status >= 500 || response.status === 429)) {
-                        await new Promise(res => setTimeout(res, delay));
-                        return fetchWithRetry(url, options, retries - 1, delay * 2);
-                    }
-                    throw new Error(errorData.error?.message || "Terjadi kesalahan pada server AI.");
-                }
-                return await response.json();
-            } catch (err) {
-                if (retries > 0 && !err.message.includes("tidak tersedia")) {
-                    await new Promise(res => setTimeout(res, delay));
-                    return fetchWithRetry(url, options, retries - 1, delay * 2);
-                }
-                throw err;
-            }
-        }
-
-        async function callAI(text, base64Image = null, mimeType = null) {
-            // URL menggunakan v1beta dengan model yang dipaksakan
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-            
-            const contents = [{
-                role: "user",
-                parts: []
-            }];
-
-            if (text) contents[0].parts.push({ text: text });
-            if (base64Image) {
-                contents[0].parts.push({
-                    inlineData: {
-                        mimeType: mimeType || "image/png",
-                        data: base64Image
-                    }
-                });
-            }
-
-            const result = await fetchWithRetry(url, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ 
-                    contents: contents,
-                    systemInstruction: { parts: [{ text: systemPrompt }] }
-                })
-            });
-
-            return result.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, sistem sedang sibuk. Silakan coba sesaat lagi.";
-        }
-
-        document.getElementById('ai-chat-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const input = document.getElementById('ai-input');
-            const text = input.value.trim();
-            if(!text && !selectedFileBase64) return;
-
-            if (isWaitingForCode) {
-                if (text.toUpperCase() === "KORINDOSUKSES") {
-                    isAuthorized = true;
-                    isWaitingForCode = false;
-                    addMessage("✅ Akses Berhasil! Anda sekarang dapat menggunakan fitur analisis foto.", 'ai');
-                } else {
-                    addMessage("❌ Kode salah. Silakan hubungi admin LPK untuk mendapatkan akses.", 'ai');
-                }
-                input.value = "";
-                return;
-            }
-
-            const currentImg = selectedFileBase64 ? document.getElementById('image-preview-img').src : null;
-            addMessage(text || "Menganalisis foto...", 'user', currentImg);
-            
-            const tempBase64 = selectedFileBase64;
-            const tempMimeType = selectedFileType;
-
-            input.value = "";
-            clearImagePreview();
-            document.getElementById('typing-indicator').classList.remove('hidden');
-
-            try {
-                const aiResponse = await callAI(text, tempBase64, tempMimeType);
-                document.getElementById('typing-indicator').classList.add('hidden');
-                addMessage(aiResponse, 'ai');
-            } catch (err) {
-                document.getElementById('typing-indicator').classList.add('hidden');
-                // Menampilkan pesan yang lebih ramah pengguna
-                addMessage("Terjadi kendala koneksi ke AI. Silakan coba kirim pesan kembali dalam beberapa saat.", 'ai');
-                console.error("AI Error:", err.message);
-            }
-        };
-
-        function generateRoadmap() {
-            const btn = document.getElementById('btn-roadmap');
-            const loading = document.getElementById('roadmap-loading');
-            const output = document.getElementById('roadmap-output');
-            
-            btn.classList.add('hidden');
-            loading.classList.remove('hidden');
-            
-            setTimeout(() => {
-                loading.classList.add('hidden');
-                output.classList.remove('hidden');
-                btn.classList.remove('hidden');
-                document.getElementById('roadmap-content').innerHTML = `
-                    <div class="roadmap-step"><p class="font-bold">1. Pelatihan Bahasa Intensif</p><p class="text-sm">Belajar 3-6 bulan di LPK Korindo untuk persiapan EPS-TOPIK atau JLPT.</p></div>
-                    <div class="roadmap-step"><p class="font-bold">2. Pendaftaran Ujian 2026</p><p class="text-sm">Bimbingan pendaftaran akun di portal resmi pemerintah (BP2MI/J-Test).</p></div>
-                    <div class="roadmap-step border-none text-blue-600 font-bold"><p>3. Matching & Keberangkatan</p><p class="text-slate-600 font-normal text-sm">Proses pengiriman berkas ke user hingga terbang dengan kontrak kerja resmi.</p></div>`;
-            }, 1200);
-        }
     </script>
 </body>
 </html>
