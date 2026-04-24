@@ -16,6 +16,8 @@
             scroll-behavior: smooth;
             -webkit-user-select: none;
             user-select: none;
+            /* Mematikan popup menu saat tekan lama secara global */
+            -webkit-touch-callout: none;
         }
         .glass {
             background: rgba(255, 255, 255, 0.9);
@@ -50,17 +52,15 @@
         }
         
         .btn-responsive {
-            -webkit-touch-callout: none !important; 
-            -webkit-user-select: none !important;
-            user-select: none !important;
             touch-action: manipulation;
             outline: none;
             -webkit-tap-highlight-color: transparent;
+            /* Tambahan khusus untuk memastikan elemen tombol tidak memicu callout */
+            -webkit-touch-callout: none;
         }
         
         .btn-responsive:active {
             transform: scale(0.95) !important;
-            opacity: 0.8;
         }
 
         .lang-dropdown {
@@ -74,16 +74,8 @@
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
             min-width: 160px;
             z-index: 100;
-            overflow: hidden;
         }
-        .lang-dropdown.show {
-            display: block;
-            animation: slideUp 0.2s ease-out;
-        }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .lang-dropdown.show { display: block; }
 
         .contact-input {
             background: #f8fafc;
@@ -92,21 +84,34 @@
             padding: 1rem 1.25rem;
             width: 100%;
             outline: none;
-            transition: all 0.3s;
-        }
-        .contact-input:focus {
-            border-color: #3b82f6;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
         }
 
-        .select-custom {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            background-size: 1.5em;
+        /* Chatbot UI */
+        #chat-window {
+            display: none;
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 380px;
+            max-width: calc(100vw - 40px);
+            height: 550px;
+            max-height: 75vh;
+            background: white;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+            border-radius: 2rem;
+            z-index: 1000;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid #f1f5f9;
         }
+        #chat-messages::-webkit-scrollbar { width: 4px; }
+        #chat-messages::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+
+        @keyframes dotFlashing {
+            0% { opacity: 0.2; }
+            100% { opacity: 1; }
+        }
+        .dot-typing { animation: dotFlashing 1s infinite linear alternate; }
     </style>
 </head>
 <body class="bg-[#fafafa] text-slate-900 overflow-x-hidden">
@@ -125,9 +130,9 @@
                 
                 <div class="flex items-center gap-2">
                     <div class="hidden md:flex space-x-8 font-semibold text-sm items-center mr-4">
-                        <a href="#beranda" data-translate="nav_home" class="text-slate-600 hover:text-blue-600 transition">Beranda</a>
-                        <a href="#tentang" data-translate="nav_about" class="text-slate-600 hover:text-blue-600 transition">Tentang</a>
-                        <a href="#program" data-translate="nav_program" class="text-slate-600 hover:text-blue-600 transition">Program</a>
+                        <a href="#beranda" data-translate="nav_home" class="text-slate-600 hover:text-blue-600 transition btn-responsive">Beranda</a>
+                        <a href="#tentang" data-translate="nav_about" class="text-slate-600 hover:text-blue-600 transition btn-responsive">Tentang</a>
+                        <a href="#program" data-translate="nav_program" class="text-slate-600 hover:text-blue-600 transition btn-responsive">Program</a>
                     </div>
 
                     <div class="relative inline-block text-left">
@@ -136,13 +141,13 @@
                             <span id="active-lang-text" class="text-[10px] font-bold text-slate-600">ID</span>
                         </button>
                         <div id="langMenu" class="lang-dropdown">
-                            <button onclick="changeLang('id')" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition text-sm font-semibold text-slate-700">
+                            <button onclick="changeLang('id')" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition text-sm font-semibold text-slate-700 border-b border-slate-50 btn-responsive">
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/9/9f/Flag_of_Indonesia.svg" class="w-5 h-3.5 object-cover rounded-sm" alt="ID"> Indonesia
                             </button>
-                            <button onclick="changeLang('en')" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition text-sm font-semibold text-slate-700">
+                            <button onclick="changeLang('en')" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition text-sm font-semibold text-slate-700 border-b border-slate-50 btn-responsive">
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Flag_of_the_United_Kingdom_%281-2%29.svg" class="w-5 h-3.5 object-cover rounded-sm" alt="EN"> English
                             </button>
-                            <button onclick="changeLang('kr')" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition text-sm font-semibold text-slate-700">
+                            <button onclick="changeLang('kr')" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition text-sm font-semibold text-slate-700 btn-responsive">
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg" class="w-5 h-3.5 object-cover rounded-sm" alt="KR"> 한국어
                             </button>
                         </div>
@@ -160,9 +165,9 @@
         </div>
         
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 p-6 space-y-4 shadow-xl">
-            <a href="#beranda" data-translate="nav_home" class="block text-slate-700 font-semibold py-2">Beranda</a>
-            <a href="#tentang" data-translate="nav_about" class="block text-slate-700 font-semibold py-2">Tentang</a>
-            <a href="#program" data-translate="nav_program" class="block text-slate-700 font-semibold py-2">Program</a>
+            <a href="#beranda" data-translate="nav_home" class="block text-slate-700 font-semibold py-2 btn-responsive">Beranda</a>
+            <a href="#tentang" data-translate="nav_about" class="block text-slate-700 font-semibold py-2 btn-responsive">Tentang</a>
+            <a href="#program" data-translate="nav_program" class="block text-slate-700 font-semibold py-2 btn-responsive">Program</a>
             <a href="#kontak" data-translate="nav_cta" class="btn-responsive block bg-blue-600 text-white text-center py-3 rounded-xl font-bold">Daftar Sekarang</a>
         </div>
     </nav>
@@ -184,162 +189,106 @@
                         Pelatihan bahasa intensif dan persiapan kerja profesional melalui skema resmi G-to-G Korea & Jepang.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 pt-4 justify-center lg:justify-start">
-                        <a href="#kontak" data-translate="nav_cta" class="btn-responsive bg-blue-600 text-white px-8 py-4 rounded-2xl font-bold hover:bg-blue-500 transition shadow-xl shadow-blue-900/40 text-center">Daftar Sekarang</a>
+                        <a href="#kontak" data-translate="nav_cta" class="btn-responsive bg-blue-600 text-white px-8 py-4 rounded-2xl font-bold hover:bg-blue-500 transition shadow-xl shadow-blue-900/40 text-center text-lg">Daftar Sekarang</a>
                         <a href="https://lpkkorindo.com/download/lpkorindo.apk" target="_blank" class="btn-responsive bg-white/5 border border-white/10 text-white px-8 py-4 rounded-2xl font-bold hover:bg-white/10 transition flex items-center justify-center gap-3">
                             <i class="fab fa-google-play"></i> DOWNLOAD APK
                         </a>
                     </div>
                 </div>
-                
-                <div class="relative group">
-                    <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-[3rem] blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                    <div class="relative bg-slate-900 ring-1 ring-white/10 rounded-[3rem] overflow-hidden shadow-2xl">
-                        <img src="https://www.image2url.com/r2/default/images/1776939981383-200a4a53-b9c5-471b-9abc-73cb56ececd2.jpg" alt="[Kebersamaan Siswa LPK Korindo]" class="w-full h-full object-cover transform transition duration-500 hover:scale-105">
-                    </div>
+                <div class="relative rounded-[3rem] overflow-hidden shadow-2xl">
+                    <img src="https://www.image2url.com/r2/default/images/1776939981383-200a4a53-b9c5-471b-9abc-73cb56ececd2.jpg" alt="Siswa LPK Korindo" class="w-full h-full object-cover">
                 </div>
             </div>
         </div>
     </section>
 
     <!-- About Section -->
-    <section id="tentang" class="py-24 md:py-32 bg-[#fafafa]">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-5xl mx-auto mb-20">
+    <section id="tentang" class="py-24 bg-[#fafafa]">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center max-w-4xl mx-auto mb-20">
                 <span class="section-tag" data-translate="about_tag">Mengenal Kami</span>
-                <h2 class="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight" data-translate="about_title">
-                    Tentang LPK Korindo
-                </h2>
-                <p class="text-lg md:text-xl text-slate-600 leading-relaxed font-medium" data-translate="about_desc">
+                <h2 class="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6" data-translate="about_title">Tentang LPK Korindo</h2>
+                <p class="text-lg text-slate-600 leading-relaxed" data-translate="about_desc">
                     LPK Korindo Indramayu merupakan lembaga kursus, program yang dikembangkan adalah bahasa Korea dan bahasa jepang, khususnya untuk calon pekerja migran Indonesia yang ingin mengikuti Program G to G (goverment to goverment) Korea Selatan dan Jepang, yakni program kerjasama antara pemerintah Indonesia dengan pemerintah Korea Selatan.
                 </p>
             </div>
 
-            <!-- Bento Layout for Visi/Misi and Sejarah -->
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-                <!-- Sejarah Card (Kini Berisi Narasi Pendirian) -->
-                <div class="md:col-span-7 bento-card p-10 md:p-14 bg-white border-slate-100">
-                    <div class="flex items-center gap-3 mb-8">
-                        <div class="h-1 w-12 bg-blue-600 rounded-full"></div>
-                        <div class="h-1 w-4 bg-blue-100 rounded-full"></div>
-                    </div>
-                    <h3 class="text-4xl font-extrabold text-slate-900 mb-6 leading-tight" data-translate="hist_title">Membangun Masa Depan <br>Sejak 2010.</h3>
-                    <p class="text-slate-500 text-lg leading-relaxed mb-12" data-translate="hist_desc_full">
-                        Didirikan sejak tahun 2010 yang berlokasi di kelurahan Sukalila Kecamatan Jatibarang Kabupaten Indramayu. Kami fokus memberikan bimbingan terbaik agar setiap siswa memiliki kompetensi standar internasional untuk bersaing di kancah global.
-                    </p>
-                    <div class="grid grid-cols-2 gap-8 pt-8 border-t border-slate-50">
-                        <div>
-                            <p class="text-3xl font-extrabold text-blue-600 mb-1">14+</p>
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest" data-translate="hist_badge">Tahun Pengalaman</p>
-                        </div>
-                        <div>
-                            <p class="text-3xl font-extrabold text-slate-900 mb-1">Resmi</p>
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Berizin & Terpercaya</p>
-                        </div>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bento-card p-10 bg-white">
+                    <h3 class="text-3xl font-extrabold mb-6" data-translate="hist_title">Membangun Masa Depan Sejak 2010.</h3>
+                    <p class="text-slate-500 text-lg mb-8" data-translate="hist_desc_full">Didirikan sejak tahun 2010 yang berlokasi di kelurahan Sukalila Kecamatan Jatibarang Kabupaten Indramayu. Kami berfokus pada pengembangan kompetensi bahasa dan keterampilan kerja untuk standar internasional.</p>
+                    <div class="flex gap-10">
+                        <div><p class="text-3xl font-bold text-blue-600">14+</p><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest" data-translate="hist_badge">Tahun Pengalaman</p></div>
+                        <div><p class="text-3xl font-bold text-slate-900">Resmi</p><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sistem G-to-G</p></div>
                     </div>
                 </div>
-
-                <!-- Visi Misi Card (Sesuai Permintaan Final) -->
-                <div class="md:col-span-5 bento-card p-10 md:p-12 bg-[#0f172a] text-white">
-                    <div class="flex items-center gap-4 mb-10">
-                        <div class="w-10 h-10 bg-blue-600/20 rounded-full flex items-center justify-center">
-                            <i class="fas fa-bullseye text-blue-400"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold" data-translate="visi_title">Visi dan Misi</h3>
-                    </div>
-                    <div class="space-y-6">
-                        <div class="flex gap-4">
-                            <div class="mt-1"><i class="fas fa-check-circle text-blue-500"></i></div>
-                            <p class="text-slate-400 text-sm leading-relaxed" data-translate="v1">Menjadi suatu lembaga yang unggul dan memiliki integritas tinggi.</p>
-                        </div>
-                        <div class="flex gap-4">
-                            <div class="mt-1"><i class="fas fa-check-circle text-blue-500"></i></div>
-                            <p class="text-slate-400 text-sm leading-relaxed" data-translate="v2">Mendidik siswa agar memiliki kemampuan bahasa korea yang baik dan benar.</p>
-                        </div>
-                        <div class="flex gap-4">
-                            <div class="mt-1"><i class="fas fa-check-circle text-blue-500"></i></div>
-                            <p class="text-slate-400 text-sm leading-relaxed" data-translate="v3">Mengembangkan program, sarana dan prasarana pelatihan sesuai dengan kebutuhan dan permintaan dari pengguna jasa.</p>
-                        </div>
-                        <div class="flex gap-4">
-                            <div class="mt-1"><i class="fas fa-check-circle text-blue-500"></i></div>
-                            <p class="text-slate-400 text-sm leading-relaxed" data-translate="v4">Meningkatkan Sumber Daya Manusia dan perekonomian masyarakat.</p>
-                        </div>
-                        <div class="flex gap-4">
-                            <div class="mt-1"><i class="fas fa-check-circle text-blue-500"></i></div>
-                            <p class="text-slate-400 text-sm leading-relaxed" data-translate="v5">Melaksanakan pelatihan berbasis kompetensi serta melaksanakan Uji Kompetensi (UJK) dalam rangka penempatan kelulusan.</p>
-                        </div>
-                    </div>
+                <div class="bento-card p-10 bg-[#0f172a] text-white">
+                    <h3 class="text-2xl font-bold mb-6 flex items-center gap-3"><i class="fas fa-bullseye text-blue-400"></i> <span data-translate="visi_title">Visi dan Misi</span></h3>
+                    <ul class="space-y-4 text-slate-400 text-sm">
+                        <li class="flex gap-3"><i class="fas fa-check-circle text-blue-500 mt-1"></i> <span data-translate="v1">Menjadi suatu lembaga yang unggul dan memiliki integritas tinggi.</span></li>
+                        <li class="flex gap-3"><i class="fas fa-check-circle text-blue-500 mt-1"></i> <span data-translate="v2">Mendidik siswa agar memiliki kemampuan bahasa korea yang baik dan benar.</span></li>
+                        <li class="flex gap-3"><i class="fas fa-check-circle text-blue-500 mt-1"></i> <span data-translate="v3">Mengembangkan program, sarana dan prasarana pelatihan sesuai dengan kebutuhan dan permintaan dari pengguna jasa.</span></li>
+                        <li class="flex gap-3"><i class="fas fa-check-circle text-blue-500 mt-1"></i> <span data-translate="v4">Meningkatkan Sumber Daya Manusia dan perekonomian masyarakat.</span></li>
+                        <li class="flex gap-3"><i class="fas fa-check-circle text-blue-500 mt-1"></i> <span data-translate="v5">Melaksanakan pelatihan berbasis kompetensi serta melaksanakan Uji Kompetensi (UJK) dalam rangka penempatan kelulusan.</span></li>
+                    </ul>
                 </div>
-
-                <!-- Map Action Card -->
-                <div class="md:col-span-12 bento-card bg-blue-600 p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6">
-                    <div class="text-center md:text-left">
-                        <h4 class="text-white text-2xl md:text-3xl font-extrabold mb-2" data-translate="map_title">Kunjungi Kantor Kami</h4>
-                        <p class="text-blue-100 text-sm md:text-base">Sukalila, Kec. Jatibarang, Kabupaten Indramayu, Jawa Barat 45273.</p>
-                    </div>
-                    <a href="https://maps.app.goo.gl/QFMiYgm4oV9UrNeY6" target="_blank" class="btn-responsive bg-white text-blue-600 px-8 py-4 rounded-2xl font-bold flex items-center gap-3 shadow-lg hover:bg-slate-50 transition">
-                        <span data-translate="map_btn">Buka di Google Maps</span> <i class="fas fa-external-link-alt"></i>
-                    </a>
+            </div>
+            
+            <!-- Map Card -->
+            <div class="mt-8 bento-card p-6 bg-blue-600 text-white flex flex-col md:flex-row justify-between items-center gap-6">
+                <div>
+                    <h4 class="text-xl font-bold mb-1">Kunjungi Kantor Kami</h4>
+                    <p class="text-blue-100 text-sm">Sukalila, Kec. Jatibarang, Kabupaten Indramayu, Jawa Barat 45273.</p>
                 </div>
+                <a href="https://maps.app.goo.gl/uX3L3zR3U3zR3U3z7" target="_blank" class="btn-responsive bg-white text-blue-600 px-6 py-3 rounded-2xl font-bold text-sm flex items-center gap-2 hover:bg-blue-50 transition">
+                    Buka di Google Maps <i class="fas fa-external-link-alt"></i>
+                </a>
             </div>
         </div>
     </section>
 
     <!-- Program Section -->
-    <section id="program" class="py-24 md:py-32 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <section id="program" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 text-center">
             <span class="section-tag" data-translate="prog_tag">Program</span>
-            <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-16" data-translate="prog_title">Pilih Destinasi Karirmu</h2>
+            <h2 class="text-4xl font-extrabold text-slate-900 mb-16" data-translate="prog_title">Pilih Destinasi Karirmu</h2>
             <div class="grid md:grid-cols-2 gap-8">
-                <div class="bento-card p-12 bg-slate-50 text-left hover:bg-white border-transparent hover:border-blue-200">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg" class="w-16 h-10 object-cover rounded-lg shadow-lg mb-8" alt="KR">
+                <div class="bento-card p-12 bg-slate-50 text-left border-transparent hover:border-blue-200">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg" class="w-16 h-10 object-cover rounded shadow mb-8" alt="Korea">
                     <h3 class="text-2xl font-extrabold mb-4" data-translate="prog_kr">EPS Korea Selatan</h3>
-                    <p class="text-slate-500 mb-8" data-translate="prog_kr_desc">Skema G-to-G resmi dengan persiapan ujian EPS-TOPIK intensif.</p>
-                    <a href="#kontak" class="text-blue-600 font-bold flex items-center gap-2 group"><span data-translate="nav_cta">Daftar Sekarang</span> <i class="fas fa-arrow-right group-hover:translate-x-2 transition"></i></a>
+                    <p class="text-slate-500" data-translate="prog_kr_desc">Skema resmi G-to-G (Government to Government) dengan persiapan EPS-TOPIK intensif untuk bekerja di sektor manufaktur dan perikanan.</p>
                 </div>
-                <div class="bento-card p-12 bg-slate-50 text-left hover:bg-white border-transparent hover:border-red-200">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/9e/Flag_of_Japan.svg" class="w-16 h-10 object-cover rounded-lg shadow-lg mb-8" alt="JP">
+                <div class="bento-card p-12 bg-slate-50 text-left border-transparent hover:border-red-200">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/9e/Flag_of_Japan.svg" class="w-16 h-10 object-cover rounded shadow mb-8" alt="Japan">
                     <h3 class="text-2xl font-extrabold mb-4" data-translate="prog_jp">Magang Jepang</h3>
-                    <p class="text-slate-500 mb-8" data-translate="prog_jp_desc">Pelatihan bahasa Jepang tingkat dasar dan persiapan kerja profesional.</p>
-                    <a href="#kontak" class="text-red-500 font-bold flex items-center gap-2 group"><span data-translate="nav_cta">Daftar Sekarang</span> <i class="fas fa-arrow-right group-hover:translate-x-2 transition"></i></a>
+                    <p class="text-slate-500" data-translate="prog_jp_desc">Pelatihan bahasa Jepang dasar (N5/N4) dan persiapan fisik serta mental untuk program pemagangan resmi di berbagai sektor industri.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Hubungi Kami Section -->
-    <section id="kontak" class="py-24 md:py-32 bg-slate-50 relative overflow-hidden">
-        <div class="max-w-5xl mx-auto px-4 relative z-10">
-            <div class="bg-[#0f172a] rounded-[3.5rem] p-8 md:p-20 shadow-2xl text-white text-center">
-                <h2 class="text-5xl md:text-7xl font-extrabold mb-6" data-translate="contact_title">Hubungi Kami</h2>
-                <p class="text-slate-400 text-lg md:text-xl mb-12 max-w-2xl mx-auto" data-translate="contact_desc_ref">Konsultasikan masa depanmu bersama admin LPK Korindo melalui formulir cepat ini.</p>
+    <!-- Hubungi Kami -->
+    <section id="kontak" class="py-24 bg-slate-50">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="bg-[#0f172a] rounded-[3.5rem] p-10 md:p-20 shadow-2xl text-white text-center">
+                <h2 class="text-4xl md:text-6xl font-extrabold mb-6" data-translate="contact_title">Hubungi Kami</h2>
+                <p class="text-slate-400 mb-12" data-translate="contact_desc_ref">Konsultasikan masa depanmu bersama admin LPK Korindo.</p>
                 
-                <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-6">Ikuti & Hubungi Kami</p>
-                <div class="flex flex-wrap justify-center gap-4 mb-16">
-                    <a href="https://wa.me/6287729124990" target="_blank" class="btn-responsive flex items-center gap-3 px-8 py-4 bg-[#0a2342]/40 border border-white/10 rounded-2xl hover:bg-white/10 transition group">
-                        <i class="fab fa-whatsapp text-green-400 text-xl"></i>
-                        <span class="text-sm font-bold text-green-400">WhatsApp</span>
-                    </a>
-                    <a href="https://web.facebook.com/LPKKORINDO" target="_blank" class="btn-responsive flex items-center gap-3 px-8 py-4 bg-[#0a2342]/40 border border-white/10 rounded-2xl hover:bg-white/10 transition">
-                        <i class="fab fa-facebook text-blue-400 text-xl"></i>
-                        <span class="text-sm font-bold text-blue-400">Facebook</span>
-                    </a>
+                <div class="flex justify-center gap-4 mb-16">
+                    <a href="https://wa.me/6287729124990" class="btn-responsive flex items-center gap-2 px-6 py-3 bg-green-600/20 text-green-400 rounded-xl border border-green-500/30 font-bold"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                    <a href="https://web.facebook.com/LPKKORINDO" class="btn-responsive flex items-center gap-2 px-6 py-3 bg-blue-600/20 text-blue-400 rounded-xl border border-blue-500/30 font-bold"><i class="fab fa-facebook"></i> Facebook</a>
                 </div>
 
-                <!-- Formulir Input -->
-                <div class="bg-white rounded-[2.5rem] p-10 md:p-14 text-left max-w-2xl mx-auto shadow-2xl relative">
-                    <form id="waForm" class="space-y-8">
-                        <div>
-                            <label class="block text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4" data-translate="f_name">Nama Lengkap</label>
-                            <input type="text" id="userName" placeholder="Masukkan nama..." class="contact-input text-slate-900 font-semibold" required>
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4" data-translate="f_program">Pilih Negara</label>
-                            <select id="userProgram" class="contact-input text-slate-900 font-semibold select-custom">
-                                <option value="G-to-G Korea Selatan" data-opt-kr>G-to-G Korea Selatan</option>
-                                <option value="Magang Jepang" data-opt-jp>Magang Jepang</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn-responsive w-full bg-blue-600 hover:bg-blue-700 text-white py-5 rounded-2xl font-extrabold text-lg transition shadow-xl shadow-blue-200 mt-6 flex items-center justify-center gap-3">
+                <div class="bg-white rounded-3xl p-8 md:p-12 text-left shadow-xl">
+                    <form id="waForm" class="space-y-6">
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest" data-translate="f_name">Nama Lengkap</label>
+                        <input type="text" id="userName" placeholder="..." class="contact-input text-slate-900 font-semibold" required>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mt-4" data-translate="f_program">Pilih Program</label>
+                        <select id="userProgram" class="contact-input text-slate-900 font-semibold">
+                            <option value="G-to-G Korea Selatan" data-opt-kr>G-to-G Korea Selatan</option>
+                            <option value="Magang Jepang" data-opt-jp>Magang Jepang</option>
+                        </select>
+                        <button type="submit" class="btn-responsive w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-bold text-lg transition shadow-lg shadow-blue-200">
                             <span data-translate="f_submit">Kirim via WhatsApp</span>
                         </button>
                     </form>
@@ -348,23 +297,52 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="bg-[#0f172a] py-16 text-center border-t border-white/5">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex flex-col items-center gap-6 mb-10">
-                <img src="https://www.image2url.com/r2/default/images/1776939883449-2a93d125-ed44-4e84-8846-791ad1edd879.jpg" alt="Logo LPK Korindo" class="h-16 grayscale opacity-50">
-                <div class="text-slate-500 font-bold tracking-widest text-[10px] uppercase">LPK KORINDO INDRAMAYU</div>
-            </div>
-            <p class="text-slate-600 text-sm">© 2026 LPK Korindo Indramayu. All Rights Reserved.</p>
-        </div>
+        <p class="text-slate-600 text-sm">© 2026 LPK Korindo Indramayu. All Rights Reserved.</p>
     </footer>
 
-    <!-- Floating WA Button -->
-    <a href="#" id="floatingWA" class="btn-responsive fixed bottom-8 right-8 z-[100] bg-green-500 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl transition hover:scale-110">
-        <i class="fab fa-whatsapp text-2xl"></i>
-    </a>
+    <!-- Chatbot UI -->
+    <div id="chat-window">
+        <div class="bg-indigo-600 p-6 text-white flex justify-between items-center shadow-lg">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-robot text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-sm font-bold leading-tight">Korindo AI Support</p>
+                    <p id="api-status" class="text-[10px] text-indigo-200 flex items-center gap-1 font-bold">Checking API...</p>
+                </div>
+            </div>
+            <button onclick="toggleChat()" class="text-white/70 hover:text-white transition btn-responsive"><i class="fas fa-times text-xl"></i></button>
+        </div>
+        <div id="chat-messages" class="flex-1 p-6 overflow-y-auto bg-slate-50 space-y-4 text-sm">
+            <div class="bg-white p-4 rounded-2xl border border-slate-100 text-slate-700 shadow-sm max-w-[85%]">
+                Halo! Saya asisten AI LPK Korindo. Ada yang bisa saya bantu terkait pendaftaran kerja ke Korea atau Jepang?
+            </div>
+        </div>
+        <div class="p-4 bg-white border-t border-slate-100 flex gap-2">
+            <input type="text" id="chat-input" placeholder="Tulis pertanyaan..." class="flex-1 bg-slate-100 border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+            <button id="send-chat" class="btn-responsive w-12 h-12 bg-indigo-600 text-white rounded-xl flex items-center justify-center hover:bg-indigo-700 transition">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Floating Chat Button -->
+    <button onclick="toggleChat()" class="btn-responsive fixed bottom-6 right-6 z-[100] bg-indigo-600 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl transition hover:scale-110">
+        <i class="fas fa-comment-dots text-2xl"></i>
+    </button>
 
     <script>
+        const GROQ_API_KEY = "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";
+        
+        const systemPrompt = `Anda adalah asisten cerdas resmi dari LPK Korindo Indramayu. 
+        Lokasi: Sukalila, Jatibarang, Indramayu. Berdiri: 2010.
+        Layanan: Bahasa Korea & Jepang (Program G-to-G resmi).
+        Instruksi: Ramah, profesional, informatif. Arahkan pengguna ke WhatsApp 087729124990 jika ingin daftar resmi. Batasi hanya topik LPK Korindo dan kerja luar negeri.`;
+
+        let chatOpen = false;
+
         const translations = {
             id: {
                 nav_home: "Beranda", nav_about: "Tentang", nav_program: "Program", nav_cta: "Daftar Sekarang",
@@ -379,21 +357,19 @@
                 v4: "Meningkatkan Sumber Daya Manusia dan perekonomian masyarakat.", 
                 v5: "Melaksanakan pelatihan berbasis kompetensi serta melaksanakan Uji Kompetensi (UJK) dalam rangka penempatan kelulusan.",
                 hist_title: "Membangun Masa Depan Sejak 2010.", 
-                hist_desc_full: "Didirikan sejak tahun 2010 yang berlokasi di kelurahan Sukalila Kecamatan Jatibarang Kabupaten Indramayu. Kami fokus memberikan bimbingan terbaik agar setiap siswa memiliki kompetensi standar internasional.", 
+                hist_desc_full: "Didirikan sejak tahun 2010 yang berlokasi di kelurahan Sukalila Kecamatan Jatibarang Kabupaten Indramayu. Kami berfokus pada pengembangan kompetensi bahasa dan keterampilan kerja untuk standar internasional.", 
                 hist_badge: "Tahun Pengalaman", 
                 prog_tag: "Program", 
                 prog_title: "Pilih Destinasi Karirmu", 
                 prog_kr: "EPS Korea Selatan", 
-                prog_kr_desc: "Skema G-to-G resmi dengan persiapan ujian EPS-TOPIK intensif.", 
+                prog_kr_desc: "Skema resmi G-to-G (Government to Government) dengan persiapan EPS-TOPIK intensif untuk bekerja di sektor manufaktur dan perikanan.", 
                 prog_jp: "Magang Jepang", 
-                prog_jp_desc: "Pelatihan bahasa Jepang tingkat dasar dan persiapan kerja profesional.",
+                prog_jp_desc: "Pelatihan bahasa Jepang dasar (N5/N4)와 persiapan fisik serta mental untuk program pemagangan resmi di berbagai sektor industri.",
                 contact_title: "Hubungi Kami", 
-                contact_desc_ref: "Konsultasikan masa depanmu bersama admin LPK Korindo melalui formulir cepat ini.", 
+                contact_desc_ref: "Konsultasikan masa depanmu bersama admin LPK Korindo.", 
                 f_name: "Nama Lengkap", 
                 f_program: "Pilih Negara", 
                 f_submit: "Kirim via WhatsApp",
-                map_title: "Kunjungi Kantor Kami", 
-                map_btn: "Buka di Google Maps", 
                 opt_kr: "G-to-G Korea Selatan", 
                 opt_jp: "Magang Jepang"
             },
@@ -410,21 +386,19 @@
                 v4: "Enhance human resources and the local economy.", 
                 v5: "Conduct competency-based training and competency testing (UJK) for graduate placement.",
                 hist_title: "Building the Future Since 2010.", 
-                hist_desc_full: "Established in 2010 in Sukalila, Jatibarang, Indramayu. We focus on providing top-tier guidance for international standards.", 
+                hist_desc_full: "Established in 2010 in Sukalila, Jatibarang, Indramayu. We focus on developing language competencies and work skills for international standards.", 
                 hist_badge: "Years Experience", 
                 prog_tag: "Programs", 
                 prog_title: "Select Your Career Path", 
                 prog_kr: "EPS South Korea", 
-                prog_kr_desc: "Official G-to-G scheme with intensive preparation.", 
+                prog_kr_desc: "Official G-to-G scheme with intensive preparation for manufacturing and fisheries sectors.", 
                 prog_jp: "Japan Internship", 
-                prog_jp_desc: "Basic Japanese language training and work prep.",
+                prog_jp_desc: "Basic Japanese language training (N5/N4) and physical/mental preparation for official internship programs.",
                 contact_title: "Contact Us", 
-                contact_desc_ref: "Consult your future with LPK Korindo admin through this quick form.", 
+                contact_desc_ref: "Consult your future with LPK Korindo admin.", 
                 f_name: "Full Name", 
                 f_program: "Select Country", 
                 f_submit: "Send via WhatsApp",
-                map_title: "Visit Our Office", 
-                map_btn: "Open in Google Maps", 
                 opt_kr: "South Korea G-to-G", 
                 opt_jp: "Japan Internship"
             },
@@ -441,21 +415,19 @@
                 v4: "인적 자원을 강화하고 지역 경제를 활성화합니다.", 
                 v5: "역량 중심 교육 및 졸업생 배치를 위한 역량 테스트(UJK)를 실시합니다.",
                 hist_title: "2010년부터 미래를 건설하다.", 
-                hist_desc_full: "2010년 인드라마유 Jatibarang의 Sukalila에 설립되었습니다. 국제적 역량을 위한 최고의 지도를 제공하는 데 집중하고 있습니다.", 
+                hist_desc_full: "2010년 인드라마유 Jatibarang의 Sukalila에 설립되었습니다. 국제 표준을 위한 언어 역량 및 직무 기술 개발에 중점을 둡니다.", 
                 hist_badge: "년 경력", 
                 prog_tag: "프로그램", 
                 prog_title: "당신의 진로를 선택하세요", 
                 prog_kr: "EPS 대한민국", 
-                prog_kr_desc: "공식 G-to-G 프로그램.", 
+                prog_kr_desc: "제조 및 어업 부문을 위한 집중 준비가 포함된 공식 G-to-G 프로그램.", 
                 prog_jp: "일본 인턴십", 
-                prog_jp_desc: "기초 일본어 교육 및 전문 직업 준비.",
+                prog_jp_desc: "기초 일본어 교육(N5/N4) 및 공식 인턴십 프로그램을 위한 신체적/정신적 준비.",
                 contact_title: "문의하기", 
-                contact_desc_ref: "이 빠른 양식을 통해 LPK Korindo 관리자와 상담하십시오.", 
+                contact_desc_ref: "LPK Korindo 관리자와 미래를 상담하십시오.", 
                 f_name: "성명", 
                 f_program: "국가 선택", 
                 f_submit: "WhatsApp으로 전송",
-                map_title: "사무실 방문", 
-                map_btn: "구글 지도로 열기", 
                 opt_kr: "한국 G-to-G", 
                 opt_jp: "일본 인턴십"
             }
@@ -468,55 +440,133 @@
         };
 
         function changeLang(lang) {
-            document.getElementById('active-flag').src = flags[lang];
-            document.getElementById('active-lang-text').innerText = lang.toUpperCase();
+            const flag = document.getElementById('active-flag');
+            const text = document.getElementById('active-lang-text');
             
-            // Translate elements with data-translate
+            flag.src = flags[lang];
+            text.innerText = lang.toUpperCase();
+            
             document.querySelectorAll('[data-translate]').forEach(el => {
                 const key = el.getAttribute('data-translate');
-                if (translations[lang][key]) el.innerText = translations[lang][key];
+                if (translations[lang] && translations[lang][key]) {
+                    el.innerText = translations[lang][key];
+                }
             });
 
-            // Translate Select Options
-            document.querySelector('[data-opt-kr]').innerText = translations[lang].opt_kr;
-            document.querySelector('[data-opt-jp]').innerText = translations[lang].opt_jp;
-            
+            const optKr = document.querySelector('[data-opt-kr]');
+            const optJp = document.querySelector('[data-opt-jp]');
+            if(optKr && translations[lang].opt_kr) optKr.innerText = translations[lang].opt_kr;
+            if(optJp && translations[lang].opt_jp) optJp.innerText = translations[lang].opt_jp;
+
             document.getElementById('langMenu').classList.remove('show');
         }
 
-        // Language Dropdown
+        async function validateConnection() {
+            const statusText = document.getElementById('api-status');
+            try {
+                const response = await fetch('https://api.groq.com/openai/v1/models', {
+                    headers: { 'Authorization': `Bearer ${GROQ_API_KEY}` }
+                });
+                if (response.ok) {
+                    statusText.innerHTML = '<span class="w-1.5 h-1.5 bg-green-400 rounded-full"></span> AI ONLINE';
+                    statusText.className = "text-[10px] text-green-400 flex items-center gap-1 font-bold";
+                }
+            } catch (e) {
+                statusText.innerText = "OFFLINE";
+            }
+        }
+        validateConnection();
+
+        function toggleChat() {
+            chatOpen = !chatOpen;
+            document.getElementById('chat-window').style.display = chatOpen ? 'flex' : 'none';
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            if (!message) return;
+
+            appendMessage("Anda", message);
+            input.value = "";
+            input.disabled = true;
+
+            const loadingId = appendMessage("AI", "...");
+            const loadingEl = document.getElementById(loadingId);
+            loadingEl.querySelector('.msg-text').classList.add('dot-typing');
+
+            try {
+                const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${GROQ_API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: "llama-3.3-70b-versatile",
+                        messages: [
+                            { role: "system", content: systemPrompt },
+                            { role: "user", content: message }
+                        ],
+                        temperature: 0.7
+                    })
+                });
+
+                const data = await response.json();
+                const aiText = data.choices[0].message.content;
+                updateMessage(loadingId, aiText);
+            } catch (error) {
+                updateMessage(loadingId, "Maaf, sedang ada gangguan koneksi. Hubungi WA 087729124990.");
+            } finally {
+                input.disabled = false;
+                input.focus();
+            }
+        }
+
+        function appendMessage(sender, text) {
+            const container = document.getElementById('chat-messages');
+            const id = "msg-" + Date.now();
+            const div = document.createElement('div');
+            const isUser = sender === "Anda";
+            
+            div.id = id;
+            div.className = `flex ${isUser ? "justify-end" : "justify-start"}`;
+            div.innerHTML = `
+                <div class="max-w-[85%] px-4 py-3 rounded-2xl shadow-sm ${
+                    isUser ? "bg-indigo-600 text-white rounded-tr-none" : "bg-white text-slate-700 border border-slate-100 rounded-tl-none"
+                }">
+                    <div class="msg-text whitespace-pre-wrap">${text}</div>
+                </div>
+            `;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+            return id;
+        }
+
+        function updateMessage(id, text) {
+            const el = document.getElementById(id);
+            if (el) {
+                const content = el.querySelector('.msg-text');
+                content.innerText = text;
+                content.classList.remove('dot-typing');
+            }
+            document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
+        }
+
+        document.getElementById('send-chat').addEventListener('click', sendMessage);
+        document.getElementById('chat-input').addEventListener('keypress', (e) => { if(e.key === 'Enter') sendMessage(); });
+
         const langBtn = document.getElementById('langBtn');
         const langMenu = document.getElementById('langMenu');
         langBtn.addEventListener('click', (e) => { e.stopPropagation(); langMenu.classList.toggle('show'); });
         window.addEventListener('click', () => langMenu.classList.remove('show'));
 
-        // Form Submission
-        const waForm = document.getElementById('waForm');
-        waForm.addEventListener('submit', (e) => {
+        document.getElementById('waForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const name = document.getElementById('userName').value;
-            const program = document.getElementById('userProgram').value;
-            
-            const message = `Assalamu'alaikum Warahmatullahi Wabarakatuh, Admin LPK Korindo. %0A%0ANama saya *${name}*. Saya tertarik untuk mengikuti program *${program}*. %0A%0AMohon informasinya, apa saja persyaratan yang harus saya siapkan untuk pendaftaran? Terima kasih.`;
-            
-            window.open(`https://wa.me/6287729124990?text=${message}`, '_blank');
-        });
-
-        // Floating WA logic
-        document.getElementById('floatingWA').addEventListener('click', (e) => {
-            e.preventDefault();
-            const message = `Assalamu'alaikum Warahmatullahi Wabarakatuh, Admin LPK Korindo. %0A%0ASaya tertarik untuk bertanya mengenai pendaftaran di LPK Korindo. %0A%0AMohon informasinya, apa saja persyaratan yang harus saya siapkan? Terima kasih.`;
-            window.open(`https://wa.me/6287729124990?text=${message}`, '_blank');
-        });
-
-        // Mobile Menu toggle
-        document.getElementById('mobile-menu-button').addEventListener('click', () => {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        });
-        
-        // Prevent default tap behavior
-        document.querySelectorAll('.btn-responsive').forEach(el => {
-            el.addEventListener('contextmenu', e => e.preventDefault());
+            const prog = document.getElementById('userProgram').value;
+            const text = `Assalamu'alaikum Warahmatullahi Wabarakatuh, Admin LPK Korindo.\n\nNama saya *${name}*. Saya tertarik untuk mengikuti program *${prog}*.\n\nMohon informasinya, apa saja persyaratan yang harus saya siapkan untuk pendaftaran? Terima kasih.`;
+            window.open(`https://wa.me/6287729124990?text=${encodeURIComponent(text)}`, '_blank');
         });
     </script>
 </body>
