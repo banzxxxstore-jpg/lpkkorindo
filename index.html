@@ -84,48 +84,25 @@
             outline: none;
         }
 
-        /* Modernized AI Chat UI */
         #chat-window {
             display: none;
             position: fixed;
             bottom: 100px;
             right: 20px;
-            width: 400px;
+            width: 380px;
             max-width: calc(100vw - 40px);
-            height: 600px;
-            max-height: 80vh;
-            background: #ffffff;
-            box-shadow: 0 30px 60px -12px rgba(15, 23, 42, 0.25);
-            border-radius: 2.5rem;
+            height: 550px;
+            max-height: 75vh;
+            background: white;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+            border-radius: 2rem;
             z-index: 1000;
             flex-direction: column;
             overflow: hidden;
-            border: 1px solid rgba(241, 245, 249, 0.5);
-            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid #f1f5f9;
         }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        #chat-messages {
-            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
-            background-size: 20px 20px;
-        }
-
-        #chat-messages::-webkit-scrollbar { width: 5px; }
-        #chat-messages::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-
-        .message-bubble {
-            max-width: 85%;
-            padding: 1rem 1.25rem;
-            border-radius: 1.5rem;
-            font-size: 0.875rem;
-            line-height: 1.5;
-            position: relative;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
+        #chat-messages::-webkit-scrollbar { width: 4px; }
+        #chat-messages::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
 
         @keyframes dotFlashing {
             0% { opacity: 0.2; }
@@ -320,75 +297,59 @@
         <p class="text-slate-600 text-sm">© 2026 LPK Korindo Indramayu. All Rights Reserved.</p>
     </footer>
 
-    <!-- Modernized Chatbot UI -->
+    <!-- Chatbot UI -->
     <div id="chat-window">
-        <div class="bg-gradient-to-r from-indigo-600 to-blue-600 p-6 text-white flex justify-between items-center">
+        <div class="bg-indigo-600 p-6 text-white flex justify-between items-center shadow-lg">
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center p-1 border border-white/30">
-                    <img src="https://www.image2url.com/r2/default/images/1776939883449-2a93d125-ed44-4e84-8846-791ad1edd879.jpg" class="w-full h-full object-cover rounded-xl" alt="Korindo Logo">
+                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center overflow-hidden">
+                    <img src="https://www.image2url.com/r2/default/images/1776939883449-2a93d125-ed44-4e84-8846-791ad1edd879.jpg" class="w-full h-full object-cover" alt="Korindo Logo">
                 </div>
                 <div>
-                    <p class="text-sm font-extrabold leading-tight tracking-wide">Korindo AI Support</p>
-                    <p id="api-status" class="text-[10px] text-indigo-100 flex items-center gap-1.5 font-bold uppercase tracking-widest mt-1">
-                        <span class="w-2 h-2 bg-yellow-400 rounded-full"></span> Checking...
-                    </p>
+                    <p class="text-sm font-bold leading-tight">Korindo AI Support</p>
+                    <p id="api-status" class="text-[10px] text-indigo-200 flex items-center gap-1 font-bold">Checking API...</p>
                 </div>
             </div>
-            <button onclick="toggleChat()" class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white/10 transition btn-responsive">
-                <i class="fas fa-times text-lg"></i>
+            <button onclick="toggleChat()" class="text-white/70 hover:text-white transition btn-responsive"><i class="fas fa-times text-xl"></i></button>
+        </div>
+        <div id="chat-messages" class="flex-1 p-6 overflow-y-auto bg-slate-50 space-y-4 text-sm">
+            <div class="bg-white p-4 rounded-2xl border border-slate-100 text-slate-700 shadow-sm max-w-[85%]">
+                Halo! Saya asisten AI LPK Korindo. Ada yang bisa saya bantu terkait pendaftaran kerja ke Korea atau Jepang?
+            </div>
+        </div>
+        <div class="p-4 bg-white border-t border-slate-100 flex gap-2">
+            <input type="text" id="chat-input" placeholder="Tulis pertanyaan..." class="flex-1 bg-slate-100 border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+            <button id="send-chat" class="btn-responsive w-12 h-12 bg-indigo-600 text-white rounded-xl flex items-center justify-center hover:bg-indigo-700 transition">
+                <i class="fas fa-paper-plane"></i>
             </button>
-        </div>
-        
-        <div id="chat-messages" class="flex-1 p-6 overflow-y-auto space-y-4">
-            <div class="message-bubble bg-slate-100 text-slate-800 rounded-tl-none mr-auto">
-                Halo! Saya asisten AI LPK Korindo (Update 2026). Ada yang bisa saya bantu terkait pendaftaran kerja ke Korea atau Jepang angkatan tahun ini? 🇰🇷 🇯🇵
-            </div>
-        </div>
-        
-        <div class="p-6 bg-white border-t border-slate-50">
-            <div class="flex gap-3 bg-slate-100 p-2 rounded-[1.75rem] border border-slate-200">
-                <input type="text" id="chat-input" placeholder="Tulis pertanyaan..." class="flex-1 bg-transparent border-none px-4 py-2 text-sm focus:ring-0 outline-none font-medium text-slate-700">
-                <button id="send-chat" class="w-12 h-12 bg-indigo-600 text-white rounded-2xl flex items-center justify-center hover:bg-indigo-700 transition shadow-lg shadow-indigo-200 btn-responsive">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-            </div>
-            <p class="text-[9px] text-center text-slate-400 mt-3 font-bold uppercase tracking-tighter">Powered by LPK Korindo Smart Intelligence</p>
         </div>
     </div>
 
     <!-- Floating Chat Button -->
-    <button onclick="toggleChat()" class="btn-responsive fixed bottom-6 right-6 z-[100] bg-indigo-600 text-white w-16 h-16 rounded-[2rem] flex items-center justify-center shadow-2xl transition hover:scale-110 hover:rotate-3">
-        <i class="fas fa-robot text-2xl"></i>
+    <button onclick="toggleChat()" class="btn-responsive fixed bottom-6 right-6 z-[100] bg-indigo-600 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl transition hover:scale-110">
+        <i class="fas fa-comment-dots text-2xl"></i>
     </button>
 
     <script>
         const GROQ_API_KEY = "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";
         
+        // Chat history storage untuk menjaga ingatan bot
         let chatHistory = [];
 
-        // Updated System Prompt with MANDATORY HANGEUL Rule
         const systemPrompt = `Anda adalah asisten cerdas resmi dari LPK Korindo Indramayu. 
-        WAKTU SEKARANG: April 2026.
+        Tugas Anda: Memberikan informasi yang akurat, membantu user dengan tata bahasa Korea/Jepang jika ditanya, dan melayani komplain.
 
-        ATURAN PENULISAN BAHASA (SANGAT PENTING):
-        - Jika memberikan contoh kalimat atau kata dalam Bahasa Korea, Anda WAJIB menyertakan tulisan asli Korea (HANGEUL).
-        - Format penyajian: [Hangeul] ([Romanisasi]) - [Arti].
-        - Contoh: "안녕하세요 (Annyeonghaseyo) - Halo".
-        - JANGAN PERNAH memberikan contoh kalimat bahasa Korea tanpa Hangeul.
-
-        BATASAN TOPIK:
-        - Anda HANYA menjawab tentang: Program G-to-G Korea Selatan, Magang Jepang, Informasi LPK Korindo, Belajar Bahasa Korea/Jepang.
-        - Jika menanyakan hal di luar topik (politik, selebriti, dll), TOLAK secara halus.
-        - Contoh penolakan: "Maaf, kapasitas saya hanya terbatas pada informasi pendaftaran Korea/Jepang di LPK Korindo. 😊"
-
-        INFORMASI DATA 2026:
-        - Status: Pendaftaran Angkatan 2026 SEDANG DIBUKA.
+        INFORMASI LEMBAGA:
         - Lokasi: Sukalila, Kec. Jatibarang, Kabupaten Indramayu, Jawa Barat 45273.
-        
-        KEBIJAKAN RESPON:
-        1. Jawab pertanyaan bahasa secara DETAIL (Penjelasan tata bahasa + 3 contoh kalimat menggunakan Hangeul).
-        2. PENUTUP PROMOSI: "Yuk, raih impianmu kerja ke luar negeri sekarang juga! 🚀 Hubungi admin kami di WhatsApp: 087729124990 📲✨"
-        3. SELALU cantumkan sumber: "Sumber: Website Resmi LPK Korindo 2026".`;
+        - Sejak: 2010.
+        - Program: EPS-TOPIK (Korea) & Magang (Jepang) melalui skema G-to-G.
+
+        KEBIJAKAN RESPON (SANGAT PENTING):
+        1. Jawablah pertanyaan user secara DETAIL dan LENGKAP. Jika user bertanya tentang tata bahasa (grammar), buatkan contoh kalimat yang banyak dan penjelasan mendalam.
+        2. DILARANG mengalihkan pembicaraan jika user komplain. Tanggapi komplain dengan serius dan tawarkan bantuan admin.
+        3. DILARANG melakukan promosi di awal atau tengah kalimat. Bot tidak boleh terlihat seperti iklan berjalan.
+        4. HANYA taruh ajakan mendaftar (WhatsApp 087729124990) di SATU baris terakhir sebagai penutup.
+        5. SELALU cantumkan sumber di akhir (Contoh: "Sumber: Website Resmi LPK Korindo").
+        6. Jaga konteks percakapan. Ingat apa yang dikatakan user sebelumnya.`;
 
         let chatOpen = false;
 
@@ -402,7 +363,8 @@
                 visi_title: "Visi dan Misi", v1: "Menjadi suatu lembaga yang unggul dan memiliki integritas tinggi.", v2: "Mendidik siswa agar memiliki kemampuan bahasa korea yang baik dan benar.", v3: "Mengembangkan program, sarana dan prasarana pelatihan sesuai dengan kebutuhan dan permintaan dari pengguna jasa.", v4: "Meningkatkan Sumber Daya Manusia dan perekonomian masyarakat.", v5: "Melaksanakan pelatihan berbasis kompetensi serta melaksanakan Uji Kompetensi (UJK) dalam rangka penempatan kelulusan.",
                 hist_title: "Membangun Masa Depan Sejak 2010.", hist_desc_full: "Didirikan sejak tahun 2010 yang berlokasi di kelurahan Sukalila Kecamatan Jatibarang Kabupaten Indramayu. Kami berfokus pada pengembangan kompetensi bahasa dan keterampilan kerja untuk standar internasional.", hist_badge: "Tahun Pengalaman", 
                 prog_tag: "Program", prog_title: "Pilih Destinasi Karirmu", prog_kr: "EPS Korea Selatan", prog_kr_desc: "Skema resmi G-to-G (Government to Government) dengan persiapan EPS-TOPIK intensif untuk bekerja di sektor manufaktur dan perikanan.", prog_jp: "Magang Jepang", prog_jp_desc: "Pelatihan bahasa Jepang dasar (N5/N4) dan persiapan fisik serta mental untuk program pemagangan resmi di berbagai sektor industri.",
-                contact_title: "Hubungi Kami", contact_desc_ref: "Konsultasikan masa depanmu bersama admin LPK Korindo melalui formulir cepat ini.", f_name: "Nama Lengkap", f_program: "Pilih Negara", f_submit: "Kirim via WhatsApp"
+                contact_title: "Hubungi Kami", contact_desc_ref: "Konsultasikan masa depanmu bersama admin LPK Korindo melalui formulir cepat ini.", f_name: "Nama Lengkap", f_program: "Pilih Negara", f_submit: "Kirim via WhatsApp",
+                opt_kr: "G-to-G Korea Selatan", opt_jp: "Magang Jepang"
             },
             en: {
                 nav_home: "Home", nav_about: "About", nav_program: "Programs", nav_cta: "Register Now",
@@ -411,7 +373,8 @@
                 visi_title: "Vision & Mission", v1: "Become an excellent institution with high integrity.", v2: "Educate students to achieve proper and correct Korean language proficiency.", v3: "Develop training programs and infrastructure according to service user needs and requests.", v4: "Enhance human resources and the local economy.", v5: "Conduct competency-based training and competency testing (UJK) for graduate placement.",
                 hist_title: "Building the Future Since 2010.", hist_desc_full: "Established in 2010 in Sukalila, Jatibarang, Indramayu. We focus on developing language competencies and work skills for international standards.", hist_badge: "Years Experience", 
                 prog_tag: "Programs", prog_title: "Select Your Career Path", prog_kr: "EPS South Korea", prog_kr_desc: "Official G-to-G scheme with intensive preparation for manufacturing and fisheries sectors.", prog_jp: "Japan Internship", prog_jp_desc: "Basic Japanese language training (N5/N4) and physical/mental preparation for official internship programs.",
-                contact_title: "Contact Us", contact_desc_ref: "Consult your future with LPK Korindo admin through this quick form.", f_name: "Full Name", f_program: "Select Country", f_submit: "Send via WhatsApp"
+                contact_title: "Contact Us", contact_desc_ref: "Consult your future with LPK Korindo admin through this quick form.", f_name: "Full Name", f_program: "Select Country", f_submit: "Send via WhatsApp",
+                opt_kr: "South Korea G-to-G", opt_jp: "Japan Internship"
             },
             kr: {
                 nav_home: "홈", nav_about: "정보", nav_program: "프로그램", nav_cta: "지금 등록하세요",
@@ -420,7 +383,8 @@
                 visi_title: "비전 및 사명", v1: "높은 성실성을 갖춘 우수한 기관이 된다.", v2: "학생들이 정확하고 올바른 한국어 능력을 갖추도록 교육한다.", v3: "서비스 이용자의 요구와 요청에 따라 교육 프로그램과 인프라를 개발한다.", v4: "인적 자원과 지역 경제를 향상시킨다.", v5: "역량 중심 교육을 실시하고 졸업생 취업을 위한 역량 테스트(UJK)를 수행한다.",
                 hist_title: "2010년부터 미래를 건설하다.", hist_desc_full: "2010년 인드라마유 자티바랑 수칼릴라에 설립되었습니다. 우리는 국제 표준에 맞는 언어 역량과 업무 기술을 개발하는 데 중점을 둡니다.", hist_badge: "경력 년수", 
                 prog_tag: "프로그램", prog_title: "진로 선택", prog_kr: "EPS 한국", prog_kr_desc: "제조 및 어업 분야 취업을 위한 집중 준비 과정을 갖춘 공식 G-to-G 제도입니다.", prog_jp: "일본 인턴십", prog_jp_desc: "공식 인턴십 프로그램을 위한 기초 일본어 교육(N5/N4) 및 신체적/정신적 준비 과정입니다.",
-                contact_title: "문의하기", contact_desc_ref: "빠른 양식을 통해 LPK 코린도 관리자와 미래를 상담하세요.", f_name: "전체 이름", f_program: "국가 선택", f_submit: "WhatsApp으로 전송"
+                contact_title: "문의하기", contact_desc_ref: "빠른 양식을 통해 LPK 코린도 관리자와 미래를 상담하세요.", f_name: "전체 이름", f_program: "국가 선택", f_submit: "WhatsApp으로 전송",
+                opt_kr: "한국 G-to-G", opt_jp: "일본 인턴십"
             }
         };
 
@@ -449,11 +413,11 @@
                     headers: { 'Authorization': `Bearer ${GROQ_API_KEY}` }
                 });
                 if (response.ok) {
-                    statusText.innerHTML = '<span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> AI Online';
-                    statusText.className = "text-[10px] text-green-400 flex items-center gap-1.5 font-bold uppercase tracking-widest mt-1";
+                    statusText.innerHTML = '<span class="w-1.5 h-1.5 bg-green-400 rounded-full"></span> AI ONLINE';
+                    statusText.className = "text-[10px] text-green-400 flex items-center gap-1 font-bold";
                 }
             } catch (e) {
-                statusText.innerText = "Offline";
+                statusText.innerText = "OFFLINE";
             }
         }
         validateConnection();
@@ -476,6 +440,7 @@
             const loadingEl = document.getElementById(loadingId);
             loadingEl.querySelector('.msg-text').classList.add('dot-typing');
 
+            // Tambahkan input user ke history
             chatHistory.push({ role: "user", content: message });
 
             try {
@@ -491,19 +456,23 @@
                             { role: "system", content: systemPrompt },
                             ...chatHistory
                         ],
-                        temperature: 0.6,
+                        temperature: 0.5,
                         max_tokens: 1024
                     })
                 });
 
                 const data = await response.json();
                 const aiText = data.choices[0].message.content;
+                
+                // Tambahkan balasan AI ke history agar bot ingat sesi ini
                 chatHistory.push({ role: "assistant", content: aiText });
+                
+                // Batasi history agar tidak terlalu panjang (10 pesan terakhir)
                 if (chatHistory.length > 20) chatHistory.shift();
 
                 updateMessage(loadingId, aiText);
             } catch (error) {
-                updateMessage(loadingId, "Maaf, sedang ada gangguan sinyal. Yuk hubungi admin via WA saja! 📲");
+                updateMessage(loadingId, "Maaf, terjadi kesalahan teknis. Hubungi admin: 087729124990.");
             } finally {
                 input.disabled = false;
                 input.focus();
@@ -518,8 +487,8 @@
             div.id = id;
             div.className = `flex ${isUser ? "justify-end" : "justify-start"}`;
             div.innerHTML = `
-                <div class="message-bubble ${
-                    isUser ? "bg-indigo-600 text-white rounded-tr-none ml-auto" : "bg-white text-slate-700 border border-slate-100 rounded-tl-none mr-auto shadow-sm"
+                <div class="max-w-[85%] px-4 py-3 rounded-2xl shadow-sm ${
+                    isUser ? "bg-indigo-600 text-white rounded-tr-none" : "bg-white text-slate-700 border border-slate-100 rounded-tl-none"
                 }">
                     <div class="msg-text whitespace-pre-wrap">${text}</div>
                 </div>
@@ -551,13 +520,7 @@
             e.preventDefault();
             const name = document.getElementById('userName').value;
             const prog = document.getElementById('userProgram').value;
-            
-            const text = `Assalamu'alaikum Warahmatullahi Wabarakatuh, Admin LPK Korindo.
-
-Nama saya *${name}*. Saya tertarik untuk mengikuti program *${prog}*.
-
-Mohon informasinya, apa saja persyaratan yang harus saya siapkan untuk pendaftaran? Terima kasih.`;
-            
+            const text = `Assalamu'alaikum, Admin LPK Korindo.\n\nNama saya *${name}*. Saya tertarik untuk mengikuti program *${prog}*.\n\nMohon informasinya, apa saja persyaratan yang harus saya siapkan untuk pendaftaran? Terima kasih.`;
             window.open(`https://wa.me/6287729124990?text=${encodeURIComponent(text)}`, '_blank');
         });
 
